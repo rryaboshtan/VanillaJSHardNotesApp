@@ -41,6 +41,12 @@ const todos = [
       command: 'sdfd',
    },
 ];
+const categories = {
+   Task: '<div class="round-fone"><i class="fas fa-shopping-cart head"></i></div>',
+   Idea: '<div class="round-fone"><i class="far fa-lightbulb head"></i></div>',
+   'Random Thought': '<div class="round-fone"><i class="fas fa-user-md head"></i></div>',
+   Quote: '<div class="round-fone"><i class="fas fa-quote-right head"></i></div>',
+};
 
 console.log(todos);
 function renderTodoList(todos) {
@@ -48,16 +54,15 @@ function renderTodoList(todos) {
    tbody.innerHTML = '';
    let str = '';
    for (const todo of todos) {
-      // tbody.innerHTML += '<tr>';
       const todoFields = Object.keys(todo);
-      str += '<tr>';
-      for (const todoField of todoFields) {
+      str += `<tr><td class="first-column">${categories[todo.category]}</td>`;
+      for (let todoField of todoFields) {
          if (todoField === 'command') {
             str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
                <button><i class="fas fa-archive"></i></button>
                <button><i class="fas fa-trash"></i></button></td>`;
          } else {
-            str += `<td>${todo[todoField]}</td>`;
+            str += `<td><input type="text" disabled value="${todo[todoField]}"></td>`;
          }
       }
       str += `</tr>`;

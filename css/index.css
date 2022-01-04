@@ -8,6 +8,11 @@ i {
 
 button {
   border: none;
+  cursor: pointer;
+}
+
+button.head-button {
+  background-color: #999999;
 }
 
 * {
@@ -16,18 +21,43 @@ button {
 }
 
 body {
-  font-size: 22;
+  font-size: 17;
 }
 
 i {
-  font-size: 15;
+  font-size: 22px;
+  display: inline;
+}
+
+i.head {
+  display: block;
+  color: #ffffff;
+  font-size: 14px;
+  background-color: #999999;
+}
+
+.round-fone {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: #999999;
 }
 
 .table {
   border-collapse: collapse;
   margin: 0 auto;
   margin-top: 20px;
-  font-size: 32;
+  font-size: 20px;
+  border: none;
 }
 
 .table thead tr {
@@ -37,15 +67,21 @@ i {
   background-color: #999999;
 }
 
+.table thead tr td {
+  padding-left: 10px;
+}
+
 .table tr {
   height: 30px;
   margin-top: 20px;
+  border: none;
   border-top: 4px solid #fff;
   background-color: #ced7e488;
-  font-size: 17px;
+  font-size: 15px;
 }
 
 .table tr td {
+  border: none;
   text-align: left;
   width: 130px;
   padding: 0;
@@ -55,12 +91,20 @@ i {
 .table tr td.command {
   text-align: right;
   padding-right: 10px;
+  width: 75px;
 }
 
 .table tr td input {
+  width: 132px;
+  font-size: 14px;
   outline: none;
   border: none;
-  padding-left: 10px;
+  padding-left: 8px;
   height: 26px;
-  background-color: #999999;
+  background-color: #ced7e488;
+}
+
+.table tr td.first-column {
+  width: 20px;
+  padding-left: 2px;
 }
