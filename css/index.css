@@ -1,0 +1,53 @@
+div {
+  font-size: 15;
+}
+
+i {
+  font-size: 30px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-size: 22;
+}
+
+i {
+  font-size: 15;
+}
+
+.table {
+  border-collapse: collapse;
+  margin: 0 auto;
+  margin-top: 20px;
+  font-size: 32;
+}
+
+.table thead tr {
+  width: 100px;
+  color: #fff;
+  background-color: #999999;
+}
+
+.table tr {
+  height: 30px;
+  margin-top: 20px;
+  border-top: 4px solid #fff;
+  background-color: #ced7e488;
+  font-size: 17px;
+}
+
+.table tr th {
+  font-size: 25;
+  width: 100px;
+  color: #fff;
+  background-color: #999999;
+}
+
+.table tr td {
+  text-align: center;
+  width: 100px;
+}
