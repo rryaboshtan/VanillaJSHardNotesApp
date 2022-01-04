@@ -1,7 +1,8 @@
+const options = { month: 'long', day: 'numeric', year: 'numeric' };
 const todos = [
    {
       name: 'Shopping list',
-      created: 'sdfd',
+      created: new Date().toLocaleDateString('en-US', options),
       category: 'Task',
       content: 'tomatoes, bread',
       dates: '',
@@ -9,7 +10,7 @@ const todos = [
    },
    {
       name: 'The teory of evolution',
-      created: 'sdfd',
+      created: new Date().toLocaleDateString('en-US', options),
       category: 'Random Thought',
       content: 'The evolution...',
       dates: '',
@@ -17,7 +18,7 @@ const todos = [
    },
    {
       name: 'New feature',
-      created: 'sdfd',
+      created: new Date().toLocaleDateString('en-US', options),
       category: 'Idea',
       content: 'Implement new...',
       dates: '3/5/2021, 5/5/2021',
@@ -25,15 +26,15 @@ const todos = [
    },
    {
       name: 'William Gaddis',
-      created: 'sdfd',
+      created: new Date().toLocaleDateString('en-US', options),
       category: 'Quote',
-      content: 'Power doesn\'t co',
+      content: "Power doesn't co",
       dates: '',
       command: 'sdfd',
    },
    {
       name: 'Books',
-      created: 'sdfd',
+      created: new Date().toLocaleDateString('en-US', options),
       category: 'Task',
       content: 'The Lean Startup',
       dates: '',
@@ -51,7 +52,13 @@ function renderTodoList(todos) {
       const todoFields = Object.keys(todo);
       str += '<tr>';
       for (const todoField of todoFields) {
-         str += `<td>${todo[todoField]}</td>`;
+         if (todoField === 'command') {
+            str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
+               <button><i class="fas fa-archive"></i></button>
+               <button><i class="fas fa-trash"></i></button></td>`;
+         } else {
+            str += `<td>${todo[todoField]}</td>`;
+         }
       }
       str += `</tr>`;
    }
@@ -60,4 +67,3 @@ function renderTodoList(todos) {
 }
 
 renderTodoList(todos);
-

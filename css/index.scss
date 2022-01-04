@@ -14,7 +14,11 @@ div {
     font-size: 15;
 }
 i {
-    font-size: 30px;
+    font-size: 20px;
+    // color: #ffffff;
+}
+button {
+    border: none;
 }
 
 * {
@@ -35,7 +39,9 @@ i {
     font-size: 32;
     // text-align: center;
     thead tr {
-         width: 100px;
+        //  width: 130px;
+        padding: 0;
+        margin: 0;
             color: #fff;
             background-color: #999999;
         }
@@ -48,16 +54,31 @@ i {
         background-color: #ced7e488;
         font-size: 17px;
 
-        th {
-            font-size: 25;
-            width: 100px;
-            color: #fff;
-            background-color: #999999;
-        }
+        // th {
+        //     font-size: 25;
+        //     width: 100px;
+        //     color: #fff;
+        //     background-color: #999999;
+        // }
         td {
-            text-align: center;
-            width: 100px;
+            text-align: left;
+            width: 130px;
+            // padding-left: 10px;
+            padding: 0;
+            margin: 0;
             // font-size: 12px;
+            &.command {
+                text-align: right;
+                padding-right: 10px;
+            }
+
+            input {
+               outline: none; 
+               border: none;
+               padding-left: 10px;
+               height: 26px;
+               background-color: #999999;
+            }
         }
     }
 }

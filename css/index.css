@@ -3,7 +3,11 @@ div {
 }
 
 i {
-  font-size: 30px;
+  font-size: 20px;
+}
+
+button {
+  border: none;
 }
 
 * {
@@ -27,7 +31,8 @@ i {
 }
 
 .table thead tr {
-  width: 100px;
+  padding: 0;
+  margin: 0;
   color: #fff;
   background-color: #999999;
 }
@@ -40,14 +45,22 @@ i {
   font-size: 17px;
 }
 
-.table tr th {
-  font-size: 25;
-  width: 100px;
-  color: #fff;
-  background-color: #999999;
+.table tr td {
+  text-align: left;
+  width: 130px;
+  padding: 0;
+  margin: 0;
 }
 
-.table tr td {
-  text-align: center;
-  width: 100px;
+.table tr td.command {
+  text-align: right;
+  padding-right: 10px;
+}
+
+.table tr td input {
+  outline: none;
+  border: none;
+  padding-left: 10px;
+  height: 26px;
+  background-color: #999999;
 }
