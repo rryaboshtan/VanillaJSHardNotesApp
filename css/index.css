@@ -27,6 +27,7 @@ body {
 i {
   font-size: 22px;
   display: inline;
+  background-color: #ced7e488;
 }
 
 i.head {
@@ -36,7 +37,11 @@ i.head {
   background-color: #999999;
 }
 
-.round-fone {
+i.first-row {
+  background-color: #999999;
+}
+
+.round-fon {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -71,11 +76,19 @@ i.head {
   padding-left: 10px;
 }
 
+.table thead tr td.first-column {
+  background-color: #999999;
+}
+
+.table thead tr td.command {
+  background-color: #999999;
+}
+
 .table tr {
   height: 30px;
   margin-top: 20px;
   border: none;
-  border-top: 4px solid #fff;
+  border-top: 4px solid #ffffff;
   background-color: #ced7e488;
   font-size: 15px;
 }
@@ -92,6 +105,7 @@ i.head {
   text-align: right;
   padding-right: 10px;
   width: 75px;
+  background-color: #ced7e488;
 }
 
 .table tr td input {
@@ -107,4 +121,5 @@ i.head {
 .table tr td.first-column {
   width: 20px;
   padding-left: 2px;
+  background-color: #ced7e488;
 }

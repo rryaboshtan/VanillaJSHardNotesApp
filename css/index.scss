@@ -22,14 +22,19 @@ body {
 i {
     font-size: 22px;
     display: inline;
+    background-color: #ced7e488;
+
     &.head {
         display: block;
         color: #ffffff;
         font-size: 14px;
         background-color: #999999;
     }
+    &.first-row {
+        background-color: #999999;
+    }
 }
-.round-fone {
+.round-fon {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,15 +49,20 @@ i {
     margin-top: 20px;
     font-size: 20px;
     border: none;
-   
+
     thead tr {
         padding: 0;
-        // padding-left: 10px;
         margin: 0;
         color: #fff;
         background-color: #999999;
         td {
             padding-left: 10px;
+            &.first-column {
+                background-color: #999999;
+            }
+            &.command {
+                background-color: #999999;
+            }
         }
     }
 
@@ -60,10 +70,9 @@ i {
         height: 30px;
         margin-top: 20px;
         border: none;
-        border-top: 4px solid #fff;
+        border-top: 4px solid #ffffff;
         background-color: #ced7e488;
         font-size: 15px;
-
 
         td {
             // display: flex;
@@ -79,21 +88,23 @@ i {
                 text-align: right;
                 padding-right: 10px;
                 width: 75px;
+                background-color: #ced7e488;
             }
 
             input {
-                  width: 132px;
+                width: 132px;
                 font-size: 14px;
                 outline: none;
                 border: none;
                 padding-left: 8px;
                 height: 26px;
-                background-color:#ced7e488;
+                background-color: #ced7e488;
             }
 
             &.first-column {
                 width: 20px;
                 padding-left: 2px;
+                background-color: #ced7e488;
             }
         }
     }
