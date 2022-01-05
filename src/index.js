@@ -99,11 +99,10 @@ function addEditEvents() {
    const editIcons = document.querySelectorAll('.fa-pencil-alt');
    const editButtons = Array.from(editIcons).map(iconElement => iconElement.parentElement);
    editButtons.forEach((editButton, index) => {
-      editButton.addEventListener('click', () => {
+      editButton.addEventListener('click', (event) => {
          isEditMode = !isEditMode;
-         console.log('sdfsdfsdf');
          const tbody = document.querySelector('.table-body');
-         const currentRow = tbody.children[index];
+         const currentRow = event.target.parentElement.parentElement.parentElement;
 
          const inputs = currentRow.querySelectorAll('input');
 
@@ -117,11 +116,12 @@ function addEditEvents() {
             input.style.backgroundColor = '#ffffff';
 
             input.addEventListener('change', event => {
-               todos[index][input.dataset.field] = event.target.value;
+                const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
+               //  todos.splice(currentTodoIndex, 1);
+               todos[currentTodoIndex][input.dataset.field] = event.target.value;
                console.log(todos);
             });
          });
       });
    });
-   console.log(editButtons);
 }
