@@ -72,9 +72,24 @@ function renderTodoList(todos) {
 }
 
 renderTodoList(todos);
-addEvents();
+addEditEvents();
+addDeleteEvents();
 
-function addEvents() {
+function addDeleteEvents() {
+   let deleteIcons = document.querySelectorAll('.fa-trash');
+   deleteIcons = Array.from(deleteIcons).slice(-5);
+
+   let deleteButtons = Array.from(deleteIcons).map(iconElement => iconElement.parentElement);
+
+   deleteButtons.forEach(deleteButton => {
+      deleteButton.addEventListener('click', event => {
+         console.log('sdfsdfsdf');
+         event.target.parentElement.parentElement.parentElement.remove();
+      });
+   });
+}
+
+function addEditEvents() {
    let isEditMode = false;
 
    const editIcons = document.querySelectorAll('.fa-pencil-alt');
@@ -92,7 +107,7 @@ function addEvents() {
             if (!isEditMode) {
                input.setAttribute('disabled', 'disabled');
                input.style.backgroundColor = '#ced7e488';
-               return
+               return;
             }
             input.removeAttribute('disabled');
             input.style.backgroundColor = '#ffffff';
