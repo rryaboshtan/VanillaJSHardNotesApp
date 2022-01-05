@@ -132,14 +132,14 @@ function addArchiveRowsEvents() {
          const currentRow = event.target.parentElement.parentElement;
          // console.log(event.target.parentElement.parentElement);
 
-         const currentArchivedTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
-         const currentTodo = todos.splice(currentArchivedTodoIndex, 1);
+         const currentArchivedTodoIndex = archivedTodos.findIndex(todo => todo.content === currentRow.dataset.content);
+         const currentTodo = archivedTodos.splice(currentArchivedTodoIndex, 1);
          console.log(todos);
          todos = todos.concat(currentTodo);
          // currentRow.remove();
-         renderNewRow();
+         renderNewRow(currentTodo[0]);
 
-         addArchiveNoteEvents();
+         // addArchiveNoteEvents();
          archivedRow.remove();
       });
 
@@ -156,8 +156,12 @@ function addArchiveRowsEvents() {
 
 function addArchiveNoteEvents() {
    let archiveIcons = document.querySelectorAll('.fa-archive');
+   console.log('Archive length Event listeners ', archiveIcons.length);
    const archiveAllIcon = archiveIcons[0];
    archiveIcons = Array.from(archiveIcons).slice(-(archiveIcons.length - 1));
+
+   // const archivedTable = document.querySelector('.archived-table');
+   // archivedTable.classList.toggle('visible');
 
    let archiveButtons = Array.from(archiveIcons).map(iconElement => iconElement.parentElement);
 
@@ -175,12 +179,34 @@ function addArchiveNoteEvents() {
    });
 
    archiveAllIcon.addEventListener('click', () => {
-      // console.log('Archiveicon click');
+      console.log('Archiveicon click');
       const archivedTable = document.querySelector('.archived-table');
       // const archivedTableBody = archivedTable.children[0];
-
+      console.log('archivedTodos.length', archivedTodos.length);
       if (archivedTodos.length > 0) {
+         // console.log('Archiveicon click');
+
          archivedTable.classList.toggle('visible');
+
+         //    if (archivedTable.classList.contains('visible')) {
+         //       archivedTable.classList.remove('visible')
+         //    } else {
+         //       archivedTable.classList.add('visible')
+         //    }
+
+         // console.log(archivedTable.classList.toggle('visible'));
+         // console.log(window.getComputedStyle(archivedTable, null).getPropertyValue('display'));
+         // if (window.getComputedStyle(archivedTable, null).getPropertyValue("display") === 'table') {
+         //     archivedTable.classList.add('visible');
+         // }
+         // console.log(archivedTable.style.visibility);
+         // if (archivedTable.style.display === 'none') {
+         //    // archivedTable.setAttribute('visibility', 'visible');
+         //    archivedTable.style.display = 'table';
+         // } else {
+         //    archivedTable.style.display = 'none';
+         // }
+
          renderArchivedTodoList(archivedTodos);
          addArchiveRowsEvents();
       }
@@ -188,20 +214,25 @@ function addArchiveNoteEvents() {
    });
 }
 
-function renderNewRow() {
+function renderNewRow(newTodo) {
    const tbody = document.querySelector('.table-body');
 
    const content = 'Some data' + parseInt(Math.random() * 200);
 
-   todos.push({
-      name: '',
-      created: new Date().toLocaleDateString('en-US', options),
-      // category: todos[0].category,
-      category: Object.keys(categories)[0],
-      content,
-      dates: '',
-      command: '',
-   });
+   if (newTodo) {
+      todos.push(newTodo);
+   } else {
+      todos.push({
+         name: '',
+         created: new Date().toLocaleDateString('en-US', options),
+         // category: todos[0].category,
+         category: Object.keys(categories)[0],
+         content,
+         dates: '',
+         command: '',
+      });
+   }
+
    const todoFields = Object.keys(todos[0]);
    const addedTodo = todos[todos.length - 1];
 
@@ -212,8 +243,6 @@ function renderNewRow() {
                <button><i class="fas fa-archive"></i></button>
                <button><i class="fas fa-trash"></i></button></td>`;
       } else {
-         // let value = todoField === 'category' ? todos[0].category : ''
-         // let value = todoField === 'content' ? content : todoField === 'category' ? todos[0].category : '';
          str += `<td><input data-field="${todoField}" type="text" disabled value="${addedTodo[todoField]}"></td>`;
       }
    }
@@ -228,11 +257,9 @@ function addCreateNoteEvent() {
    const createNoteButton = document.querySelector('.create-note');
    createNoteButton.addEventListener('click', () => {
       const archivedTable = document.querySelector('.archived-table');
-      // table.setAttribute('visibility', 'hidden');
-      // table.setAttribute('display', 'none');
       archivedTable.classList.toggle('visible');
-
-      renderNewRow();
+      renderNewRow(null);
+      addArchiveNoteEvents();
    });
 }
 
@@ -256,7 +283,6 @@ function addDeleteEvents() {
 
 function addEditEvents() {
    let isEditMode = false;
-   let oldValue = null;
 
    const editIcons = document.querySelectorAll('.fa-pencil-alt');
    const editButtons = Array.from(editIcons).map(iconElement => iconElement.parentElement);
@@ -265,7 +291,7 @@ function addEditEvents() {
          isEditMode = !isEditMode;
          const tbody = document.querySelector('.table-body');
          const currentRow = event.target.parentElement.parentElement.parentElement;
-
+         let oldValue = null;
          const inputs = currentRow.querySelectorAll('input');
 
          inputs.forEach(input => {
