@@ -126,30 +126,20 @@ function debounce(fn, delay = 250) {
 function addArchiveRowsEvents() {
    const archivedTableBody = document.querySelector('.archived-table-body');
    const archivedRows = Array.from(archivedTableBody.children);
-   let toggler = false;
 
    archivedRows.forEach(archivedRow => {
       archivedRow.addEventListener('click', () => {
-
          archivedRow.remove();
-      })
+      });
 
-      archivedRow.addEventListener('mousemove', debounce(event => {
+      archivedRow.addEventListener('mouseleave', () => {
+         archivedRow.style.backgroundColor = '#777777';
+      });
+
+      archivedRow.addEventListener('mouseenter', event => {
          console.log('MouseEnter');
-         toggler = !toggler
-         // if (event.target.)
-         // const targetParent = event.target.parentElement.parentElement;
-         // archivedRow.classList.add('selected-border');
-         // archivedRow.style.backgroundColor = archivedRow.style.backgroundColor !== '#d4c671' ? '#d4c671' : '#fff';
-         if (toggler) {
-
-            archivedRow.style.backgroundColor = '#ffffff';
-         } else {
-            archivedRow.style.backgroundColor = '#777777'
-         }
-         console.log(archivedRow);
-         // console.log(event.target.parentElement.parentElement);
-      }));
+         archivedRow.style.backgroundColor = '#ffffff';
+      });
    });
 }
 
