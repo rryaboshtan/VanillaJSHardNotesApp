@@ -106,6 +106,47 @@ addEditEvents();
 addDeleteEvents();
 addCreateNoteEvent();
 addArchiveNoteEvents();
+// addArchiveRowsEvents();
+
+function debounce(fn, delay = 250) {
+   let timer = null;
+
+   if (delay === 0) {
+      return fn;
+   }
+
+   return function () {
+      clearTimeout(timer);
+      timer = setTimeout(function () {
+         fn.apply(this);
+      }, delay);
+   };
+}
+
+function addArchiveRowsEvents() {
+   const archivedTableBody = document.querySelector('.archived-table-body');
+   const archivedRows = Array.from(archivedTableBody.children);
+   let toggler = false;
+
+   archivedRows.forEach(archivedRow => {
+      archivedRow.addEventListener('mousemove', debounce(event => {
+         console.log('MouseEnter');
+         toggler = !toggler
+         // if (event.target.)
+         // const targetParent = event.target.parentElement.parentElement;
+         // archivedRow.classList.add('selected-border');
+         // archivedRow.style.backgroundColor = archivedRow.style.backgroundColor !== '#d4c671' ? '#d4c671' : '#fff';
+         if (toggler) {
+
+            archivedRow.style.backgroundColor = '#ffffff';
+         } else {
+            archivedRow.style.backgroundColor = '#777777'
+         }
+         console.log(archivedRow);
+         // console.log(event.target.parentElement.parentElement);
+      }));
+   });
+}
 
 function addArchiveNoteEvents() {
    let archiveIcons = document.querySelectorAll('.fa-archive');
@@ -134,6 +175,7 @@ function addArchiveNoteEvents() {
       // archivedTable.setAttribute('dislay', 'block');
       archivedTable.classList.toggle('visible');
       renderArchivedTodoList(archivedTodos);
+      addArchiveRowsEvents();
    });
 }
 
@@ -178,7 +220,7 @@ function addCreateNoteEvent() {
       // table.setAttribute('visibility', 'hidden');
       // table.setAttribute('display', 'none');
       archivedTable.classList.toggle('visible');
-      
+
       renderNewRow();
    });
 }

@@ -60,6 +60,11 @@ i {
     // visibility: visible;
     display: none;
 }
+.selected-border {
+    border: 3px solid #d4c671;
+    background-color: #d4c671;
+    height: 35px;
+}
 
 .table,
 .archived-table {

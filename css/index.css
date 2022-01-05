@@ -71,6 +71,12 @@ i.first-row {
   display: none;
 }
 
+.selected-border {
+  border: 3px solid #d4c671;
+  background-color: #d4c671 !important;
+  height: 35px;
+}
+
 .table,
 .archived-table {
   border-collapse: collapse;
