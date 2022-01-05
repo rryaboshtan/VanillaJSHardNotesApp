@@ -15,6 +15,15 @@ button.head-button {
   background-color: #999999;
 }
 
+button.create-note {
+  border: 1px solid #cccccc;
+  border-radius: 3px;
+  padding: 3px;
+  margin: 5px auto 0px auto;
+  position: relative;
+  left: 892px;
+}
+
 * {
   margin: 0;
   padding: 0;

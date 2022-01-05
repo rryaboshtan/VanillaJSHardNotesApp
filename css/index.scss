@@ -10,6 +10,17 @@ button {
     &.head-button {
         background-color: #999999;
     }
+    &.create-note {
+        border: 1px solid #cccccc;
+        border-radius: 3px;
+        padding: 3px;
+        // text-align: right;
+        // float: right;
+        margin: 5px auto 0px auto;
+        position: relative;
+        // right: -700px;
+        left: 892px;
+    }
 }
 
 * {
