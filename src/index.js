@@ -41,6 +41,9 @@ const todos = [
       command: 'sdfd',
    },
 ];
+
+let archivedTodos = [];
+
 const categories = {
    Task: '<div class="round-fon"><i class="fas fa-shopping-cart head"></i></div>',
    Idea: '<div class="round-fon"><i class="far fa-lightbulb head"></i></div>',
@@ -71,10 +74,69 @@ function renderTodoList(todos) {
    console.log(tbody);
 }
 
+function renderArchivedTodoList(archivedTodos) {
+   const tbody = document.querySelector('.archived-table-body');
+   tbody.innerHTML = '';
+   let str = '';
+   for (let todo of archivedTodos) {
+      const todoFields = Object.keys(todo);
+      str += `<tr data-content="${todo.content}"><td class="first-column">${categories[todo.category]}</td>`;
+      for (let todoField of todoFields) {
+         if (todoField === 'command') {
+            str += '';
+         } else {
+            str += `<td><input data-field="${todoField}" type="text" disabled value="${todo[todoField]}"></td>`;
+         }
+      }
+      str += `</tr>`;
+   }
+   tbody.innerHTML = str;
+   // tbody.parentElement.classList.add('visible');
+
+   // tbody.parentElement.removeAttribute('visibility');
+   // tbody.parentElement.setAttribute('visibility', 'visible');
+   // tbody.parentElement.style.backgroundColor = '#666';
+
+   console.log(tbody.parentElement);
+}
+
 renderTodoList(todos);
+
 addEditEvents();
 addDeleteEvents();
 addCreateNoteEvent();
+addArchiveNoteEvents();
+
+function addArchiveNoteEvents() {
+   let archiveIcons = document.querySelectorAll('.fa-archive');
+   const archiveAllIcon = archiveIcons[0];
+   archiveIcons = Array.from(archiveIcons).slice(-5);
+
+   let archiveButtons = Array.from(archiveIcons).map(iconElement => iconElement.parentElement);
+
+   archiveButtons.forEach(archiveButton => {
+      archiveButton.addEventListener('click', event => {
+         const currentRow = event.target.parentElement.parentElement.parentElement;
+
+         const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
+         const currentTodo = todos.splice(currentTodoIndex, 1);
+         archivedTodos = archivedTodos.concat(currentTodo);
+
+         console.log(archivedTodos);
+         currentRow.remove();
+      });
+   });
+
+   archiveAllIcon.addEventListener('click', () => {
+      console.log('Archiveicon click');
+      const archivedTable = document.querySelector('.archived-table');
+
+      // archivedTable.setAttribute('dislay', 'block');
+      archivedTable.classList.toggle('visible');
+      renderArchivedTodoList(archivedTodos);
+   });
+}
+
 function renderNewRow() {
    const tbody = document.querySelector('.table-body');
    const todoFields = Object.keys(todos[0]);
@@ -112,6 +174,11 @@ function renderNewRow() {
 function addCreateNoteEvent() {
    const createNoteButton = document.querySelector('.create-note');
    createNoteButton.addEventListener('click', () => {
+      const archivedTable = document.querySelector('.archived-table');
+      // table.setAttribute('visibility', 'hidden');
+      // table.setAttribute('display', 'none');
+      archivedTable.classList.toggle('visible');
+      
       renderNewRow();
    });
 }

@@ -55,7 +55,15 @@ i {
     border-radius: 50%;
     background-color: #999999;
 }
-.table {
+
+.visible {
+    // visibility: visible;
+    display: none;
+}
+
+.table,
+.archived-table {
+    // position: relative;
     border-collapse: collapse;
     margin: 0 auto;
     margin-top: 20px;
@@ -68,7 +76,7 @@ i {
         // color: #fff;
         background-color: #999999;
         td {
-        color: #fff;
+            color: #fff;
 
             padding-left: 10px;
             &.first-column {
@@ -125,5 +133,29 @@ i {
                 background-color: #ced7e488;
             }
         }
+    }
+}
+
+.archived-table {
+    position: absolute;
+    top: 20px;
+    right: 200px;
+    z-index: 1;
+    border-top: 3px solid #000000  ;
+
+    border: 3px solid #000000  ;
+    // visibility: hidden;
+    // display: none;
+    // top: -152px;
+    // left: 800px;
+    background-color: #999999;
+    // font-size: 20px;
+    // tbody tr td {
+    //     input {
+    //         background-color: rgb(163, 156, 62);
+    //     }
+    // }
+    tr {
+        border-top: 3px solid #000000;
     }
 }
