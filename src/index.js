@@ -129,6 +129,11 @@ function addArchiveRowsEvents() {
    let toggler = false;
 
    archivedRows.forEach(archivedRow => {
+      archivedRow.addEventListener('click', () => {
+
+         archivedRow.remove();
+      })
+
       archivedRow.addEventListener('mousemove', debounce(event => {
          console.log('MouseEnter');
          toggler = !toggler
