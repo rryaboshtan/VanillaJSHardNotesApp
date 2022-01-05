@@ -1,5 +1,5 @@
 const options = { month: 'long', day: 'numeric', year: 'numeric' };
-const todos = [
+let todos = [
    {
       name: 'Shopping list',
       created: new Date().toLocaleDateString('en-US', options),
@@ -128,7 +128,18 @@ function addArchiveRowsEvents() {
    const archivedRows = Array.from(archivedTableBody.children);
 
    archivedRows.forEach(archivedRow => {
-      archivedRow.addEventListener('click', () => {
+      archivedRow.addEventListener('click', event => {
+         const currentRow = event.target.parentElement.parentElement;
+         // console.log(event.target.parentElement.parentElement);
+
+         const currentArchivedTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
+         const currentTodo = todos.splice(currentArchivedTodoIndex, 1);
+         console.log(todos);
+         todos = todos.concat(currentTodo);
+         // currentRow.remove();
+         renderNewRow();
+
+         addArchiveNoteEvents();
          archivedRow.remove();
       });
 
@@ -146,7 +157,7 @@ function addArchiveRowsEvents() {
 function addArchiveNoteEvents() {
    let archiveIcons = document.querySelectorAll('.fa-archive');
    const archiveAllIcon = archiveIcons[0];
-   archiveIcons = Array.from(archiveIcons).slice(-5);
+   archiveIcons = Array.from(archiveIcons).slice(-(archiveIcons.length - 1));
 
    let archiveButtons = Array.from(archiveIcons).map(iconElement => iconElement.parentElement);
 
@@ -164,19 +175,22 @@ function addArchiveNoteEvents() {
    });
 
    archiveAllIcon.addEventListener('click', () => {
-      console.log('Archiveicon click');
+      // console.log('Archiveicon click');
       const archivedTable = document.querySelector('.archived-table');
+      // const archivedTableBody = archivedTable.children[0];
 
+      if (archivedTodos.length > 0) {
+         archivedTable.classList.toggle('visible');
+         renderArchivedTodoList(archivedTodos);
+         addArchiveRowsEvents();
+      }
       // archivedTable.setAttribute('dislay', 'block');
-      archivedTable.classList.toggle('visible');
-      renderArchivedTodoList(archivedTodos);
-      addArchiveRowsEvents();
    });
 }
 
 function renderNewRow() {
    const tbody = document.querySelector('.table-body');
- 
+
    const content = 'Some data' + parseInt(Math.random() * 200);
 
    todos.push({
@@ -188,7 +202,7 @@ function renderNewRow() {
       dates: '',
       command: '',
    });
-     const todoFields = Object.keys(todos[0]);
+   const todoFields = Object.keys(todos[0]);
    const addedTodo = todos[todos.length - 1];
 
    let str = `<tr data-content="${content}"><td class="first-column">${categories[addedTodo.category]}</td>`;
@@ -224,7 +238,7 @@ function addCreateNoteEvent() {
 
 function addDeleteEvents() {
    let deleteIcons = document.querySelectorAll('.fa-trash');
-   deleteIcons = Array.from(deleteIcons).slice(-5);
+   deleteIcons = Array.from(deleteIcons).slice(-(deleteIcons.length - 1));
 
    let deleteButtons = Array.from(deleteIcons).map(iconElement => iconElement.parentElement);
 
