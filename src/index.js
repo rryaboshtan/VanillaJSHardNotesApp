@@ -53,9 +53,9 @@ function renderTodoList(todos) {
    const tbody = document.querySelector('.table-body');
    tbody.innerHTML = '';
    let str = '';
-   for (const todo of todos) {
+   for (let todo of todos) {
       const todoFields = Object.keys(todo);
-      str += `<tr><td class="first-column">${categories[todo.category]}</td>`;
+      str += `<tr data-content="${todo.content}"><td class="first-column">${categories[todo.category]}</td>`;
       for (let todoField of todoFields) {
          if (todoField === 'command') {
             str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
@@ -83,8 +83,12 @@ function addDeleteEvents() {
 
    deleteButtons.forEach(deleteButton => {
       deleteButton.addEventListener('click', event => {
-         console.log('sdfsdfsdf');
-         event.target.parentElement.parentElement.parentElement.remove();
+         const currentRow = event.target.parentElement.parentElement.parentElement;
+
+         const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
+         todos.splice(currentTodoIndex, 1);
+
+         currentRow.remove();
       });
    });
 }
