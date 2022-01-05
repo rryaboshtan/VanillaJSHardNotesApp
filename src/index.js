@@ -1,4 +1,5 @@
 const options = { month: 'long', day: 'numeric', year: 'numeric' };
+let count = 0;
 let todos = [
    {
       name: 'Shopping list',
@@ -100,6 +101,16 @@ function renderArchivedTodoList(archivedTodos) {
    console.log(tbody.parentElement);
 }
 
+const onArchiveClick = event => {
+   const currentRow = event.target.parentElement.parentElement.parentElement;
+
+   const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
+   const currentTodo = todos.splice(currentTodoIndex, 1);
+   archivedTodos = archivedTodos.concat(currentTodo);
+
+   console.log(archivedTodos);
+   currentRow.remove();
+};
 renderTodoList(todos);
 
 addEditEvents();
@@ -130,7 +141,6 @@ function addArchiveRowsEvents() {
    archivedRows.forEach(archivedRow => {
       archivedRow.addEventListener('click', event => {
          const currentRow = event.target.parentElement.parentElement;
-         // console.log(event.target.parentElement.parentElement);
 
          const currentArchivedTodoIndex = archivedTodos.findIndex(todo => todo.content === currentRow.dataset.content);
          const currentTodo = archivedTodos.splice(currentArchivedTodoIndex, 1);
@@ -139,7 +149,7 @@ function addArchiveRowsEvents() {
          // currentRow.remove();
          renderNewRow(currentTodo[0]);
 
-         // addArchiveNoteEvents();
+         addArchiveNoteEvents();
          archivedRow.remove();
       });
 
@@ -155,6 +165,7 @@ function addArchiveRowsEvents() {
 }
 
 function addArchiveNoteEvents() {
+   count++;
    let archiveIcons = document.querySelectorAll('.fa-archive');
    console.log('Archive length Event listeners ', archiveIcons.length);
    const archiveAllIcon = archiveIcons[0];
@@ -166,51 +177,22 @@ function addArchiveNoteEvents() {
    let archiveButtons = Array.from(archiveIcons).map(iconElement => iconElement.parentElement);
 
    archiveButtons.forEach(archiveButton => {
-      archiveButton.addEventListener('click', event => {
-         const currentRow = event.target.parentElement.parentElement.parentElement;
-
-         const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
-         const currentTodo = todos.splice(currentTodoIndex, 1);
-         archivedTodos = archivedTodos.concat(currentTodo);
-
-         console.log(archivedTodos);
-         currentRow.remove();
-      });
+      archiveButton.addEventListener('click', onArchiveClick);
    });
 
    archiveAllIcon.addEventListener('click', () => {
       console.log('Archiveicon click');
       const archivedTable = document.querySelector('.archived-table');
-      // const archivedTableBody = archivedTable.children[0];
       console.log('archivedTodos.length', archivedTodos.length);
       if (archivedTodos.length > 0) {
-         // console.log('Archiveicon click');
-
+         if (count === 1) {
+            archivedTable.classList.toggle('visible');
+         }
          archivedTable.classList.toggle('visible');
-
-         //    if (archivedTable.classList.contains('visible')) {
-         //       archivedTable.classList.remove('visible')
-         //    } else {
-         //       archivedTable.classList.add('visible')
-         //    }
-
-         // console.log(archivedTable.classList.toggle('visible'));
-         // console.log(window.getComputedStyle(archivedTable, null).getPropertyValue('display'));
-         // if (window.getComputedStyle(archivedTable, null).getPropertyValue("display") === 'table') {
-         //     archivedTable.classList.add('visible');
-         // }
-         // console.log(archivedTable.style.visibility);
-         // if (archivedTable.style.display === 'none') {
-         //    // archivedTable.setAttribute('visibility', 'visible');
-         //    archivedTable.style.display = 'table';
-         // } else {
-         //    archivedTable.style.display = 'none';
-         // }
 
          renderArchivedTodoList(archivedTodos);
          addArchiveRowsEvents();
       }
-      // archivedTable.setAttribute('dislay', 'block');
    });
 }
 
@@ -310,15 +292,18 @@ function addEditEvents() {
             });
             input.addEventListener('change', event => {
                const currentRow = event.target.parentElement.parentElement;
-               // currentRow.dataset.content = oldValue;
+               if (input.dataset.field === 'content') {
+                  currentRow.dataset.content = event.target.value;
+                  currentRow.dataset.content = oldValue;
+               }
                console.log(currentRow);
                const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
                //  todos.splice(currentTodoIndex, 1);
                todos[currentTodoIndex][input.dataset.field] = event.target.value;
                if (input.dataset.field === 'content') {
                   currentRow.dataset.content = event.target.value;
+                  oldValue = event.target.value;
                }
-               // oldValue = event.target.value;
                console.log(todos);
             });
          });

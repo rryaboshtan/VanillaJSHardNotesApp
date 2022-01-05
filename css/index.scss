@@ -14,11 +14,8 @@ button {
         border: 1px solid #cccccc;
         border-radius: 3px;
         padding: 3px;
-        // text-align: right;
-        // float: right;
         margin: 5px auto 0px auto;
         position: relative;
-        // right: -700px;
         left: 892px;
     }
 }
@@ -56,12 +53,7 @@ i {
     background-color: #999999;
 }
 
-// .hidden {
-//     visibility: hidden;
-// }
-
 .visible {
-    // visibility: visible;
     display: none;
 }
 .selected-border {
@@ -72,7 +64,6 @@ i {
 
 .table,
 .archived-table {
-    // position: relative;
     border-collapse: collapse;
     margin: 0 auto;
     margin-top: 20px;
@@ -82,7 +73,6 @@ i {
     thead tr {
         padding: 0;
         margin: 0;
-        // color: #fff;
         background-color: #999999;
         td {
             color: #fff;
@@ -106,16 +96,13 @@ i {
         font-size: 15px;
 
         td {
-            // display: flex;
-            // flex-direction: column;
             border: none;
             text-align: left;
             width: 130px;
             padding: 0;
             margin: 0;
             color: #ccc4c4;
-            // background-color: #ced7e488;
-            // font-size: 14px;
+
             &.command {
                 text-align: right;
                 padding-right: 10px;
@@ -150,20 +137,12 @@ i {
     top: 20px;
     right: 200px;
     z-index: 1;
-    border-top: 3px solid #000000  ;
+    border-top: 3px solid #000000;
 
-    border: 3px solid #000000  ;
-    // visibility: hidden;
-    // display: none;
-    // top: -152px;
-    // left: 800px;
+    border: 3px solid #000000;
+
     background-color: #999999;
-    // font-size: 20px;
-    // tbody tr td {
-    //     input {
-    //         background-color: rgb(163, 156, 62);
-    //     }
-    // }
+
     tr {
         border-top: 3px solid #000000;
     }
