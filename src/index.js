@@ -176,17 +176,19 @@ function addArchiveNoteEvents() {
 
 function renderNewRow() {
    const tbody = document.querySelector('.table-body');
-   const todoFields = Object.keys(todos[0]);
+ 
    const content = 'Some data' + parseInt(Math.random() * 200);
 
    todos.push({
       name: '',
       created: new Date().toLocaleDateString('en-US', options),
-      category: todos[0].category,
+      // category: todos[0].category,
+      category: Object.keys(categories)[0],
       content,
       dates: '',
       command: '',
    });
+     const todoFields = Object.keys(todos[0]);
    const addedTodo = todos[todos.length - 1];
 
    let str = `<tr data-content="${content}"><td class="first-column">${categories[addedTodo.category]}</td>`;
