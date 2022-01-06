@@ -1,10 +1,7 @@
 import defineIdProperty from "./helper.js";
 
 class Render {
-   constructor(notes, archivedNotes, categories) {
-      this.notes = notes;
-      this.archivedNotes = archivedNotes;
-      this.categories = categories;
+   constructor() {
    }
 
    #categoriesMap = {
@@ -14,15 +11,15 @@ class Render {
       Quote: '<div class="round-fon"><i class="fas fa-quote-right head"></i></div>',
    };
 
-   renderCategories() {
+   renderCategories(categories) {
       const tbody = document.querySelector('.categories-table-body');
       tbody.innerHTML = '';
       let str = '';
-      for (let category of Object.keys(this.categories)) {
+      for (let category of Object.keys(categories)) {
          str += `<tr></td>`;
          str += `<td><input type="text" disabled value="${category}"></td>`;
-         str += `<td><input data-field="active" type="text" disabled value="${this.categories[category].active}"></td>`;
-         str += `<td><input data-field="archived" type="text" disabled value="${this.categories[category].archived}"></td>`;
+         str += `<td><input data-field="active" type="text" disabled value="${categories[category].active}"></td>`;
+         str += `<td><input data-field="archived" type="text" disabled value="${categories[category].archived}"></td>`;
       }
       str += `</tr>`;
       tbody.innerHTML = str;
@@ -51,7 +48,6 @@ class Render {
    renderCategoryField(note, noteField) {
       return `<td>
             <select data-field="${noteField}" disabled> 
-            
                <option value="Task" ${note[noteField] === 'Task' ? 'selected' : ''}>Task</option>
                <option value="Random Thought" ${note[noteField] === 'Random Thought' ? 'selected' : ''}>Random Thought</option>
                <option value="Idea" ${note[noteField] === 'Idea' ? 'selected' : ''}>Idea</option>
