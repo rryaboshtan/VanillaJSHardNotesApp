@@ -92,7 +92,6 @@ i {
     }
     tbody tr td select {
         &:disabled {
-            // color: rgb(88, 86, 86);
             color: #000000;
         }
     }
@@ -111,7 +110,6 @@ i {
             width: 120px;
             padding: 0;
             margin: 0;
-            // color: #ccc4c4;
             &:has(select) {
                 background-color: #ced7e488;
             }
@@ -128,7 +126,6 @@ i {
             }
             input,
             select {
-                // color: #777a7e;
                 width: 142px;
                 font-size: 14px;
                 outline: none;
@@ -136,18 +133,9 @@ i {
                 padding-left: 8px;
                 height: 26px;
                 background-color: #ced7e488;
-                // &:not(:disabled) {
-                    // color: #000000ff;
-                // }
-                &:disabled {
-                    // background-color: #000;
-                // color: #ced7e488;
-
-                }
             }
 
             &.first-column {
-                // &:first-child {
                 width: 20px;
                 padding-left: 2px;
                 background-color: #ced7e488;
@@ -162,9 +150,7 @@ i {
     right: 200px;
     z-index: 1;
     border-top: 3px solid #000000;
-
     border: 3px solid #000000;
-
     background-color: #999999;
 
     tr {
@@ -175,7 +161,6 @@ i {
     position: absolute;
     top: 280px;
     left: 350px;
-    // margin: 0 auto;
     .center {
         text-align: center;
     }

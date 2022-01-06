@@ -67,7 +67,6 @@ const categories = {
    },
 };
 
-console.log(notes);
 function renderCategories() {
    const tbody = document.querySelector('.categories-table-body');
    tbody.innerHTML = '';
@@ -80,7 +79,6 @@ function renderCategories() {
    }
    str += `</tr>`;
    tbody.innerHTML = str;
-   console.log(tbody);
 }
 
 function renderNoteList(notes) {
@@ -119,7 +117,6 @@ function renderNoteList(notes) {
       str += `</tr>`;
    }
    tbody.innerHTML = str;
-   console.log(tbody);
 }
 
 function renderArchivedNoteList(archivedNotes) {
@@ -139,9 +136,18 @@ function renderArchivedNoteList(archivedNotes) {
       str += `</tr>`;
    }
    tbody.innerHTML = str;
-
-   console.log(tbody.parentElement);
 }
+
+const onDeleteNote = event => {
+   const currentRow = event.target.parentElement.parentElement.parentElement;
+
+   const currentNoteIndex = notes.findIndex(note => note.content === currentRow.dataset.content);
+   const currentNote = notes.splice(currentNoteIndex, 1);
+   currentRow.remove();
+
+   categories[currentNote[0].category].active--;
+   renderCategories();
+};
 
 const onArchiveClick = event => {
    const currentRow = event.target.parentElement.parentElement.parentElement;
@@ -158,13 +164,10 @@ const onArchiveClick = event => {
       value: currentNote.id,
    });
 
-   console.log(archivedNotes);
-
    categories[currentNote[0].category].active--;
    categories[currentNote[0].category].archived++;
    initSelectEvents();
    renderCategories();
-   // renderNoteList(notes);
    currentRow.remove();
 };
 renderNoteList(notes);
@@ -179,35 +182,19 @@ function initSelectEvents() {
    const selectItems = document.querySelectorAll('select');
 
    selectItems.forEach(selectItem => {
-      // selectItem.addEventListener('click', event => {
-      //    oldCategory = event.target.value;
-      // });
-
       selectItem.addEventListener('change', event => {
-         // console.log('event.target.value', event.target.value);
-         console.log('event add................ ');
          const currentRow = event.target.parentElement.parentElement;
 
          const currentNoteIndex = notes.findIndex(note => note.id.toString() === currentRow.dataset.id);
-         // const currentNote = archivedNotes.splice(currentNoteIndex, 1);
          const oldCategory = notes[currentNoteIndex].category;
 
          notes[currentNoteIndex].category = event.target.value;
 
-         //   console.log(notes);
-         //   notes = notes.concat(currentNote);
-         // currentRow.remove();
-         //   renderNewRow(currentNote[0]);
-         // categories[currentNote[0].category].archived--;
          categories[oldCategory].active--;
          categories[notes[currentNoteIndex].category].active++;
          // Change first td icon according to the new category
          currentRow.children[0].innerHTML = categoriesMap[notes[currentNoteIndex].category];
-         // renderNoteList(notes);
          renderCategories();
-
-         // initArchiveNoteEvents();
-         // archivedRow.remove();
       });
    });
 }
@@ -222,16 +209,11 @@ function initArchiveRowsEvents() {
 
          const currentArchivedNoteIndex = archivedNotes.findIndex(note => note.content === currentRow.dataset.content);
          const currentNote = archivedNotes.splice(currentArchivedNoteIndex, 1);
-         console.log('currentNote.id = ', currentNote.id);
-         // console.log(notes);
-         // notes = notes.concat(currentNote);
-         // currentRow.remove();
 
          renderNewRow(currentNote[0]);
          categories[currentNote[0].category].archived--;
          renderCategories();
 
-         // initSelectEvents();
          initArchiveNoteEvents();
          archivedRow.remove();
       });
@@ -241,7 +223,6 @@ function initArchiveRowsEvents() {
       });
 
       archivedRow.addEventListener('mouseenter', () => {
-         console.log('MouseEnter');
          archivedRow.style.backgroundColor = '#ffffff';
       });
    });
@@ -250,7 +231,6 @@ function initArchiveRowsEvents() {
 function initArchiveNoteEvents() {
    count++;
    let archiveIcons = document.querySelectorAll('.fa-archive');
-   console.log('Archive length Event listeners ', archiveIcons.length);
    const archiveAllIcon = archiveIcons[0];
    archiveIcons = Array.from(archiveIcons).slice(-(archiveIcons.length - 1));
 
@@ -261,9 +241,7 @@ function initArchiveNoteEvents() {
    });
 
    archiveAllIcon.addEventListener('click', () => {
-      console.log('Archiveicon click');
       const archivedTable = document.querySelector('.archived-table');
-      console.log('archivedNotes.length', archivedNotes.length);
       if (archivedNotes.length > 0) {
          if (count === 1) {
             archivedTable.classList.toggle('visible');
@@ -303,7 +281,6 @@ function renderNewRow(newNote) {
    });
 
    categories[addedNote.category].active++;
-   console.log(notes);
    renderCategories();
 
    const noteFields = Object.keys(notes[0]);
@@ -340,7 +317,6 @@ function initCreateNoteEvent() {
    const createNoteButton = document.querySelector('.create-note');
    createNoteButton.addEventListener('click', () => {
       const archivedTable = document.querySelector('.archived-table');
-      // archivedTable.classList.toggle('visible');
       renderNewRow(null);
    });
 }
@@ -352,17 +328,7 @@ function initDeleteEvents() {
    let deleteButtons = Array.from(deleteIcons).map(iconElement => iconElement.parentElement);
 
    deleteButtons.forEach(deleteButton => {
-      deleteButton.addEventListener('click', event => {
-         const currentRow = event.target.parentElement.parentElement.parentElement;
-
-         const currentNoteIndex = notes.findIndex(note => note.content === currentRow.dataset.content);
-         const currentNote = notes.splice(currentNoteIndex, 1);
-         console.log(notes);
-         currentRow.remove();
-
-         categories[currentNote[0].category].active--;
-         renderCategories();
-      });
+      deleteButton.addEventListener('click', onDeleteNote);
    });
 }
 
@@ -395,19 +361,9 @@ function initEditEvents() {
             });
             input.addEventListener('change', event => {
                const currentRow = event.target.parentElement.parentElement;
-               // if (input.dataset.field === 'content') {
-               //    // currentRow.dataset.content = event.target.value;
-               //    currentRow.dataset.content = oldValue;
-               // }
-               // console.log(currentRow);
                const currentNoteIndex = notes.findIndex(note => note.id.toString() === currentRow.dataset.id);
 
                notes[currentNoteIndex][input.dataset.field] = event.target.value;
-               // if (input.dataset.field === 'content') {
-               // currentRow.dataset.content = event.target.value;
-               // oldValue = event.target.value;
-               // }
-               console.log(notes);
             });
          });
       });
