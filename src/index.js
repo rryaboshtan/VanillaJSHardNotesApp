@@ -90,15 +90,7 @@ function renderOneNote(note) {
                <button><i class="fas fa-archive"></i></button>
                <button><i class="fas fa-trash"></i></button></td>`;
       } else if (noteField === 'category') {
-         str += `<td>
-                     <select data-field="${noteField}" disabled> 
-                     
-                        <option value="Task" ${note[noteField] === 'Task' ? 'selected' : ''}>Task</option>
-                        <option value="Random Thought" ${
-                           note[noteField] === 'Random Thought' ? 'selected' : ''
-                        }>Random Thought</option>
-                        <option value="Idea" ${note[noteField] === 'Idea' ? 'selected' : ''}>Idea</option>
-                     </select></td>`;
+         str += renderCategoryField(note, noteField);
       } else {
          str += `<td><input data-field="${noteField}" type="text" disabled value="${note[noteField]}"></td>`;
       }
@@ -106,17 +98,31 @@ function renderOneNote(note) {
    str += `</tr>`;
    return str;
 }
+
+function renderCategoryField(note, noteField) {
+   return `<td>
+            <select data-field="${noteField}" disabled> 
+            
+               <option value="Task" ${note[noteField] === 'Task' ? 'selected' : ''}>Task</option>
+               <option value="Random Thought" ${note[noteField] === 'Random Thought' ? 'selected' : ''}>Random Thought</option>
+               <option value="Idea" ${note[noteField] === 'Idea' ? 'selected' : ''}>Idea</option>
+            </select></td>`;
+}
+
+function defineIdProperty(note) {
+   Object.defineProperty(note, 'id', {
+      enumerable: false,
+      configurable: false,
+      writable: true,
+      value: Math.random() * 200,
+   });
+}
 function renderNoteList(notes) {
    const tbody = document.querySelector('.table-body');
    tbody.innerHTML = '';
    let str = '';
    for (let note of notes) {
-      Object.defineProperty(note, 'id', {
-         enumerable: false,
-         configurable: false,
-         writable: true,
-         value: Math.random() * 200,
-      });
+      defineIdProperty(note);
       str += renderOneNote(note);
    }
    tbody.innerHTML = str;
@@ -140,7 +146,18 @@ function renderArchivedNoteList(archivedNotes) {
    }
    tbody.innerHTML = str;
 }
+const onAllArchiveShow = () => {
+   const archivedTable = document.querySelector('.archived-table');
+   if (archivedNotes.length > 0) {
+      if (count === 1) {
+         archivedTable.classList.toggle('visible');
+      }
+      archivedTable.classList.toggle('visible');
 
+      renderArchivedNoteList(archivedNotes);
+      initArchiveRowsEvents();
+   }
+};
 const onDeleteNote = event => {
    const currentRow = event.target.parentElement.parentElement.parentElement;
 
@@ -160,12 +177,7 @@ const onArchiveClick = event => {
    archivedNotes = archivedNotes.concat(currentNote);
 
    const lastArchivedNote = archivedNotes[archivedNotes.length - 1];
-   Object.defineProperty(lastArchivedNote, 'id', {
-      enumerable: false,
-      configurable: false,
-      writable: true,
-      value: currentNote.id,
-   });
+   defineIdProperty(lastArchivedNote);
 
    categories[currentNote[0].category].active--;
    categories[currentNote[0].category].archived++;
@@ -173,6 +185,21 @@ const onArchiveClick = event => {
    renderCategories();
    currentRow.remove();
 };
+
+const onArchivedRowClick = event => {
+   const currentRow = event.target.parentElement.parentElement;
+
+   const currentArchivedNoteIndex = archivedNotes.findIndex(note => note.content === currentRow.dataset.content);
+   const currentNote = archivedNotes.splice(currentArchivedNoteIndex, 1);
+
+   renderNewRow(currentNote[0]);
+   categories[currentNote[0].category].archived--;
+   renderCategories();
+
+   initArchiveNoteEvents();
+   currentRow.remove();
+};
+
 renderNoteList(notes);
 renderCategories();
 initEditEvents();
@@ -207,19 +234,7 @@ function initArchiveRowsEvents() {
    const archivedRows = Array.from(archivedTableBody.children);
 
    archivedRows.forEach(archivedRow => {
-      archivedRow.addEventListener('click', event => {
-         const currentRow = event.target.parentElement.parentElement;
-
-         const currentArchivedNoteIndex = archivedNotes.findIndex(note => note.content === currentRow.dataset.content);
-         const currentNote = archivedNotes.splice(currentArchivedNoteIndex, 1);
-
-         renderNewRow(currentNote[0]);
-         categories[currentNote[0].category].archived--;
-         renderCategories();
-
-         initArchiveNoteEvents();
-         archivedRow.remove();
-      });
+      archivedRow.addEventListener('click', onArchivedRowClick);
 
       archivedRow.addEventListener('mouseleave', () => {
          archivedRow.style.backgroundColor = '#777777';
@@ -234,7 +249,7 @@ function initArchiveRowsEvents() {
 function initArchiveNoteEvents() {
    count++;
    let archiveIcons = document.querySelectorAll('.fa-archive');
-   const archiveAllIcon = archiveIcons[0];
+   const allArchiveShowIcon = archiveIcons[0];
    archiveIcons = Array.from(archiveIcons).slice(-(archiveIcons.length - 1));
 
    let archiveButtons = Array.from(archiveIcons).map(iconElement => iconElement.parentElement);
@@ -243,18 +258,7 @@ function initArchiveNoteEvents() {
       archiveButton.addEventListener('click', onArchiveClick);
    });
 
-   archiveAllIcon.addEventListener('click', () => {
-      const archivedTable = document.querySelector('.archived-table');
-      if (archivedNotes.length > 0) {
-         if (count === 1) {
-            archivedTable.classList.toggle('visible');
-         }
-         archivedTable.classList.toggle('visible');
-
-         renderArchivedNoteList(archivedNotes);
-         initArchiveRowsEvents();
-      }
-   });
+   allArchiveShowIcon.addEventListener('click', onAllArchiveShow);
 }
 
 function renderNewRow(newNote) {
@@ -276,17 +280,10 @@ function renderNewRow(newNote) {
    }
 
    const addedNote = notes[notes.length - 1];
-   Object.defineProperty(addedNote, 'id', {
-      enumerable: false,
-      configurable: false,
-      writable: true,
-      value: Math.random() * 200,
-   });
+   defineIdProperty(addedNote);
 
    categories[addedNote.category].active++;
    renderCategories();
-
-   const noteFields = Object.keys(addedNote);
 
    const str = renderOneNote(addedNote);
    tbody.innerHTML += str;
@@ -330,26 +327,30 @@ function initEditEvents() {
          const inputs = currentRow.querySelectorAll('input, select');
 
          inputs.forEach(input => {
-            if (!isEditMode) {
-               input.setAttribute('disabled', 'disabled');
-               input.style.backgroundColor = '#ced7e488';
-               return;
-            }
-            input.removeAttribute('disabled');
-            input.style.backgroundColor = '#ffffff';
-
-            input.addEventListener('click', event => {
-               if (event.target.dataset.field === 'content') {
-                  oldValue = event.target.value;
-               }
-            });
-            input.addEventListener('change', event => {
-               const currentRow = event.target.parentElement.parentElement;
-               const currentNoteIndex = notes.findIndex(note => note.id.toString() === currentRow.dataset.id);
-
-               notes[currentNoteIndex][input.dataset.field] = event.target.value;
-            });
+            setInputEvents(input, isEditMode);
          });
       });
+   });
+}
+
+function setInputEvents(input, isEditMode) {
+   if (!isEditMode) {
+      input.setAttribute('disabled', 'disabled');
+      input.style.backgroundColor = '#ced7e488';
+      return;
+   }
+   input.removeAttribute('disabled');
+   input.style.backgroundColor = '#ffffff';
+
+   input.addEventListener('click', event => {
+      if (event.target.dataset.field === 'content') {
+         oldValue = event.target.value;
+      }
+   });
+   input.addEventListener('change', event => {
+      const currentRow = event.target.parentElement.parentElement;
+      const currentNoteIndex = notes.findIndex(note => note.id.toString() === currentRow.dataset.id);
+
+      notes[currentNoteIndex][input.dataset.field] = event.target.value;
    });
 }
