@@ -1,3 +1,5 @@
+import defineIdProperty from "./helper.js";
+
 class Render {
    constructor(notes, archivedNotes, categories) {
       this.notes = notes;
@@ -16,11 +18,11 @@ class Render {
       const tbody = document.querySelector('.categories-table-body');
       tbody.innerHTML = '';
       let str = '';
-      for (let category of Object.keys(categories)) {
+      for (let category of Object.keys(this.categories)) {
          str += `<tr></td>`;
          str += `<td><input type="text" disabled value="${category}"></td>`;
-         str += `<td><input data-field="active" type="text" disabled value="${categories[category].active}"></td>`;
-         str += `<td><input data-field="archived" type="text" disabled value="${categories[category].archived}"></td>`;
+         str += `<td><input data-field="active" type="text" disabled value="${this.categories[category].active}"></td>`;
+         str += `<td><input data-field="archived" type="text" disabled value="${this.categories[category].archived}"></td>`;
       }
       str += `</tr>`;
       tbody.innerHTML = str;
@@ -35,7 +37,7 @@ class Render {
                <button><i class="fas fa-archive"></i></button>
                <button><i class="fas fa-trash"></i></button></td>`;
          } else if (noteField === 'category') {
-            str += renderCategoryField(note, noteField);
+            str += this.renderCategoryField(note, noteField);
          } else {
             str += `<td><input data-field="${noteField}" type="text" disabled value="${note[noteField]}"></td>`;
          }
@@ -44,9 +46,6 @@ class Render {
       if (tBody) {
          tBody.innerHTML += str;
       }
-      //   else {
-      //      return str;
-      //   }
    }
 
    renderCategoryField(note, noteField) {
@@ -65,7 +64,7 @@ class Render {
       let str = '';
       for (let note of notes) {
          defineIdProperty(note);
-         renderOneNote(note, tbody);
+         this.renderOneNote(note, tbody);
       }
    }
 

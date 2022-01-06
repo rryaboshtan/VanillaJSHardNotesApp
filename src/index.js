@@ -1,4 +1,4 @@
-import Render from "./Render";
+import Render from "./Render.js";
 
 
 const options = { month: 'long', day: 'numeric', year: 'numeric' };
@@ -90,7 +90,7 @@ const onAllArchiveShow = () => {
       }
       archivedTable.classList.toggle('visible');
 
-      renderArchivedNoteList(archivedNotes);
+      render.renderArchivedNoteList(archivedNotes);
       initArchiveRowsEvents();
    }
 };
@@ -102,7 +102,7 @@ const onDeleteNote = event => {
    currentRow.remove();
 
    categories[currentNote[0].category].active--;
-   renderCategories();
+   render.renderCategories();
 };
 
 const onArchiveClick = event => {
@@ -118,7 +118,7 @@ const onArchiveClick = event => {
    categories[currentNote[0].category].active--;
    categories[currentNote[0].category].archived++;
    initSelectEvents();
-   renderCategories();
+   render.renderCategories();
    currentRow.remove();
 };
 
@@ -130,14 +130,14 @@ const onArchivedRowClick = event => {
 
    appendNewRow(currentNote[0]);
    categories[currentNote[0].category].archived--;
-   renderCategories();
+   render.renderCategories();
 
    initArchiveNoteEvents();
    currentRow.remove();
 };
 
-renderNoteList(notes);
-renderCategories();
+render.renderNoteList(notes);
+render.renderCategories();
 initEditEvents();
 initDeleteEvents();
 initCreateNoteEvent();
@@ -161,7 +161,7 @@ function initSelectEvents() {
          // Change first td icon according to the new category
          currentRow.children[0].innerHTML = categoriesMap[notes[currentNoteIndex].category];
          // renderNoteList(notes);
-         renderCategories();
+         render.renderCategories();
       });
    });
 }
@@ -220,9 +220,9 @@ function appendNewRow(newNote) {
    defineIdProperty(addedNote);
 
    categories[addedNote.category].active++;
-   renderCategories();
+   render.renderCategories();
 
-   renderOneNote(addedNote, tbody);
+   render.renderOneNote(addedNote, tbody);
 
    initSelectEvents();
    initEditEvents();
