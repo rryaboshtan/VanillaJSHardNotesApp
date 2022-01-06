@@ -333,16 +333,15 @@ function renderNewRow(newNote) {
    initSelectEvents();
    initEditEvents();
    initDeleteEvents();
+   initArchiveNoteEvents();
 }
 
 function initCreateNoteEvent() {
    const createNoteButton = document.querySelector('.create-note');
    createNoteButton.addEventListener('click', () => {
       const archivedTable = document.querySelector('.archived-table');
-      archivedTable.classList.toggle('visible');
+      // archivedTable.classList.toggle('visible');
       renderNewRow(null);
-      initArchiveNoteEvents();
-      initSelectEvents();
    });
 }
 
