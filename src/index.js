@@ -269,7 +269,6 @@ function renderNewRow(newTodo) {
       todos.push({
          name: '',
          created: new Date().toLocaleDateString('en-US', options),
-         // category: todos[0].category,
          category: Object.keys(categoriesMap)[0],
          content,
          dates: '',
@@ -375,7 +374,7 @@ function initEditEvents() {
                   // currentRow.dataset.content = event.target.value;
                   currentRow.dataset.content = oldValue;
                }
-               console.log(currentRow);
+               // console.log(currentRow);
                const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
 
                todos[currentTodoIndex][input.dataset.field] = event.target.value;
