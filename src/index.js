@@ -1,3 +1,6 @@
+import Render from "./Render";
+
+
 const options = { month: 'long', day: 'numeric', year: 'numeric' };
 let count = 0;
 let notes = [
@@ -67,47 +70,7 @@ const categories = {
    },
 };
 
-function renderCategories() {
-   const tbody = document.querySelector('.categories-table-body');
-   tbody.innerHTML = '';
-   let str = '';
-   for (let category of Object.keys(categories)) {
-      str += `<tr></td>`;
-      str += `<td><input type="text" disabled value="${category}"></td>`;
-      str += `<td><input data-field="active" type="text" disabled value="${categories[category].active}"></td>`;
-      str += `<td><input data-field="archived" type="text" disabled value="${categories[category].archived}"></td>`;
-   }
-   str += `</tr>`;
-   tbody.innerHTML = str;
-}
-
-function renderOneNote(note) {
-   const noteFields = Object.keys(note);
-   let str = `<tr data-id="${note.id}"><td class="first-column">${categoriesMap[note.category]}</td>`;
-   for (let noteField of noteFields) {
-      if (noteField === 'command') {
-         str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
-               <button><i class="fas fa-archive"></i></button>
-               <button><i class="fas fa-trash"></i></button></td>`;
-      } else if (noteField === 'category') {
-         str += renderCategoryField(note, noteField);
-      } else {
-         str += `<td><input data-field="${noteField}" type="text" disabled value="${note[noteField]}"></td>`;
-      }
-   }
-   str += `</tr>`;
-   return str;
-}
-
-function renderCategoryField(note, noteField) {
-   return `<td>
-            <select data-field="${noteField}" disabled> 
-            
-               <option value="Task" ${note[noteField] === 'Task' ? 'selected' : ''}>Task</option>
-               <option value="Random Thought" ${note[noteField] === 'Random Thought' ? 'selected' : ''}>Random Thought</option>
-               <option value="Idea" ${note[noteField] === 'Idea' ? 'selected' : ''}>Idea</option>
-            </select></td>`;
-}
+const render = new Render(notes, archivedNotes, categories);
 
 function defineIdProperty(note) {
    Object.defineProperty(note, 'id', {
@@ -117,35 +80,8 @@ function defineIdProperty(note) {
       value: Math.random() * 200,
    });
 }
-function renderNoteList(notes) {
-   const tbody = document.querySelector('.table-body');
-   tbody.innerHTML = '';
-   let str = '';
-   for (let note of notes) {
-      defineIdProperty(note);
-      str += renderOneNote(note);
-   }
-   tbody.innerHTML = str;
-}
 
-function renderArchivedNoteList(archivedNotes) {
-   const tbody = document.querySelector('.archived-table-body');
-   tbody.innerHTML = '';
-   let str = '';
-   for (let note of archivedNotes) {
-      const noteFields = Object.keys(note);
-      str += `<tr data-id="${note.id}"><td class="first-column">${categoriesMap[note.category]}</td>`;
-      for (let noteField of noteFields) {
-         if (noteField === 'command') {
-            str += '';
-         } else {
-            str += `<td><input data-field="${noteField}" type="text" disabled value="${note[noteField]}"></td>`;
-         }
-      }
-      str += `</tr>`;
-   }
-   tbody.innerHTML = str;
-}
+
 const onAllArchiveShow = () => {
    const archivedTable = document.querySelector('.archived-table');
    if (archivedNotes.length > 0) {
@@ -192,7 +128,7 @@ const onArchivedRowClick = event => {
    const currentArchivedNoteIndex = archivedNotes.findIndex(note => note.content === currentRow.dataset.content);
    const currentNote = archivedNotes.splice(currentArchivedNoteIndex, 1);
 
-   renderNewRow(currentNote[0]);
+   appendNewRow(currentNote[0]);
    categories[currentNote[0].category].archived--;
    renderCategories();
 
@@ -224,6 +160,7 @@ function initSelectEvents() {
          categories[notes[currentNoteIndex].category].active++;
          // Change first td icon according to the new category
          currentRow.children[0].innerHTML = categoriesMap[notes[currentNoteIndex].category];
+         // renderNoteList(notes);
          renderCategories();
       });
    });
@@ -261,7 +198,7 @@ function initArchiveNoteEvents() {
    allArchiveShowIcon.addEventListener('click', onAllArchiveShow);
 }
 
-function renderNewRow(newNote) {
+function appendNewRow(newNote) {
    const tbody = document.querySelector('.table-body');
 
    const content = 'Some data' + parseInt(Math.random() * 200);
@@ -272,7 +209,7 @@ function renderNewRow(newNote) {
       notes.push({
          name: '',
          created: new Date().toLocaleDateString('en-US', options),
-         category: Object.keys(categoriesMap)[0],
+         category: Object.keys(categories)[0],
          content,
          dates: '',
          command: '',
@@ -285,8 +222,7 @@ function renderNewRow(newNote) {
    categories[addedNote.category].active++;
    renderCategories();
 
-   const str = renderOneNote(addedNote);
-   tbody.innerHTML += str;
+   renderOneNote(addedNote, tbody);
 
    initSelectEvents();
    initEditEvents();
@@ -297,8 +233,8 @@ function renderNewRow(newNote) {
 function initCreateNoteEvent() {
    const createNoteButton = document.querySelector('.create-note');
    createNoteButton.addEventListener('click', () => {
-      const archivedTable = document.querySelector('.archived-table');
-      renderNewRow(null);
+      // const archivedTable = document.querySelector('.archived-table');
+      appendNewRow(null);
    });
 }
 
@@ -323,7 +259,7 @@ function initEditEvents() {
          isEditMode = !isEditMode;
          const tbody = document.querySelector('.table-body');
          const currentRow = event.target.parentElement.parentElement.parentElement;
-         let oldValue = null;
+         // let oldValue = null;
          const inputs = currentRow.querySelectorAll('input, select');
 
          inputs.forEach(input => {
