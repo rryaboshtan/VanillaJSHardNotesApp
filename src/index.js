@@ -98,11 +98,12 @@ function renderTodoList(todos) {
          } else if (todoField === 'category') {
             str += `<td>
                      <select data-field="${todoField}" disabled> 
-                        <option value="Task" ${todo[todoField] === 'Task' ? 'select' : ''}>Task</option>
+                     
+                        <option value="Task" ${todo[todoField] === 'Task' ? 'selected' : ''}>Task</option>
                         <option value="Random Thought" ${
-                           todo[todoField] === 'Random Thought' ? 'select' : ''
+                           todo[todoField] === 'Random Thought' ? 'selected' : ''
                         }>Random Thought</option>
-                        <option value="Idea" ${todo[todoField] === 'Idea' ? 'select' : ''}>Idea</option>
+                        <option value="Idea" ${todo[todoField] === 'Idea' ? 'selected' : ''}>Idea</option>
                      </select></td>`;
          } else {
             str += `<td><input data-field="${todoField}" type="text" disabled value="${todo[todoField]}"></td>`;
@@ -162,8 +163,6 @@ function initSelectEvents() {
    const selectItems = document.querySelectorAll('select');
    let oldCategory = null;
 
-   
-
    selectItems.forEach(selectItem => {
       selectItem.addEventListener('click', event => {
          oldCategory = event.target.value;
@@ -208,7 +207,7 @@ function initArchiveRowsEvents() {
          const currentArchivedTodoIndex = archivedTodos.findIndex(todo => todo.content === currentRow.dataset.content);
          const currentTodo = archivedTodos.splice(currentArchivedTodoIndex, 1);
          console.log(todos);
-         todos = todos.concat(currentTodo);
+         // todos = todos.concat(currentTodo);
          // currentRow.remove();
          renderNewRow(currentTodo[0]);
          categories[currentTodo[0].category].archived--;
@@ -279,12 +278,13 @@ function renderNewRow(newTodo) {
    }
 
    categories[todos[todos.length - 1].category].active++;
+   console.log(todos);
    renderCategories();
 
    const todoFields = Object.keys(todos[0]);
    const addedTodo = todos[todos.length - 1];
 
-   let str = `<tr data-content="${content}"><td class="first-column">${categoriesMap[addedTodo.category]}</td>`;
+   let str = `<tr data-content="${addedTodo.content}"><td class="first-column">${categoriesMap[addedTodo.category]}</td>`;
    for (let todoField of todoFields) {
       if (todoField === 'command') {
          str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
@@ -293,11 +293,11 @@ function renderNewRow(newTodo) {
       } else if (todoField === 'category') {
          str += `<td>
                      <select data-field="${todoField}" disabled> 
-                        <option value="Task" ${todoFields[todoField] === 'Task' ? 'select' : ''}>Task</option>
+                        <option value="Task" ${addedTodo[todoField] === 'Task' ? 'selected' : ''}>Task</option>
                         <option value="Random Thought" ${
-                           todoFields[todoField] === 'Random Thought' ? 'select' : ''
+                           addedTodo[todoField] === 'Random Thought' ? 'selected' : ''
                         }>Random Thought</option>
-                        <option value="Idea" ${todoFields[todoField] === 'Idea' ? 'select' : ''}>Idea</option>
+                        <option value="Idea" ${addedTodo[todoField] === 'Idea' ? 'selected' : ''}>Idea</option>
                      </select></td>`;
       } else {
          str += `<td><input data-field="${todoField}" type="text" disabled value="${addedTodo[todoField]}"></td>`;
@@ -372,7 +372,7 @@ function initEditEvents() {
             input.addEventListener('change', event => {
                const currentRow = event.target.parentElement.parentElement;
                if (input.dataset.field === 'content') {
-                  currentRow.dataset.content = event.target.value;
+                  // currentRow.dataset.content = event.target.value;
                   currentRow.dataset.content = oldValue;
                }
                console.log(currentRow);
