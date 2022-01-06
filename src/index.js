@@ -28,7 +28,7 @@ let todos = [
    {
       name: 'William Gaddis',
       created: new Date().toLocaleDateString('en-US', options),
-      category: 'Quote',
+      category: 'Task',
       content: "Power doesn't co",
       dates: '',
       command: 'sdfd',
@@ -45,21 +45,51 @@ let todos = [
 
 let archivedTodos = [];
 
-const categories = {
+const categoriesMap = {
    Task: '<div class="round-fon"><i class="fas fa-shopping-cart head"></i></div>',
    Idea: '<div class="round-fon"><i class="far fa-lightbulb head"></i></div>',
    'Random Thought': '<div class="round-fon"><i class="fas fa-user-md head"></i></div>',
    Quote: '<div class="round-fon"><i class="fas fa-quote-right head"></i></div>',
 };
 
+const categories = {
+   Task: {
+      active: 3,
+      archived: 0,
+   },
+   'Random Thought': {
+      active: 1,
+      archived: 0,
+   },
+   Idea: {
+      active: 1,
+      archived: 0,
+   },
+};
+
 console.log(todos);
+function renderCategories() {
+   const tbody = document.querySelector('.categories-table-body');
+   tbody.innerHTML = '';
+   let str = '';
+   for (let category of Object.keys(categories)) {
+      str += `<tr></td>`;
+      str += `<td><input type="text" disabled value="${category}"></td>`;
+      str += `<td><input data-field="active" type="text" disabled value="${categories[category].active}"></td>`;
+      str += `<td><input data-field="archived" type="text" disabled value="${categories[category].archived}"></td>`;
+   }
+   str += `</tr>`;
+   tbody.innerHTML = str;
+   console.log(tbody);
+}
+
 function renderTodoList(todos) {
    const tbody = document.querySelector('.table-body');
    tbody.innerHTML = '';
    let str = '';
    for (let todo of todos) {
       const todoFields = Object.keys(todo);
-      str += `<tr data-content="${todo.content}"><td class="first-column">${categories[todo.category]}</td>`;
+      str += `<tr data-content="${todo.content}"><td class="first-column">${categoriesMap[todo.category]}</td>`;
       for (let todoField of todoFields) {
          if (todoField === 'command') {
             str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
@@ -81,7 +111,7 @@ function renderArchivedTodoList(archivedTodos) {
    let str = '';
    for (let todo of archivedTodos) {
       const todoFields = Object.keys(todo);
-      str += `<tr data-content="${todo.content}"><td class="first-column">${categories[todo.category]}</td>`;
+      str += `<tr data-content="${todo.content}"><td class="first-column">${categoriesMap[todo.category]}</td>`;
       for (let todoField of todoFields) {
          if (todoField === 'command') {
             str += '';
@@ -92,11 +122,6 @@ function renderArchivedTodoList(archivedTodos) {
       str += `</tr>`;
    }
    tbody.innerHTML = str;
-   // tbody.parentElement.classList.add('visible');
-
-   // tbody.parentElement.removeAttribute('visibility');
-   // tbody.parentElement.setAttribute('visibility', 'visible');
-   // tbody.parentElement.style.backgroundColor = '#666';
 
    console.log(tbody.parentElement);
 }
@@ -109,30 +134,23 @@ const onArchiveClick = event => {
    archivedTodos = archivedTodos.concat(currentTodo);
 
    console.log(archivedTodos);
+
+   categories[currentTodo[0].category].active--;
+   categories[currentTodo[0].category].archived++;
+   renderCategories();
    currentRow.remove();
 };
 renderTodoList(todos);
-
+renderCategories();
 addEditEvents();
 addDeleteEvents();
 addCreateNoteEvent();
+
+// const categoriesTableRows = document.querySelectorAll('.categories-table-body input[data-field]');
+// console.log(categoriesTableRows);
+// const activeCategoriesInputs = document.querySelectorAll('.categories-table-body input[data-field="active"]');
+// const archiveCategoriesInputs = document.querySelectorAll('.categories-table-body input[data-field="archived"]');
 addArchiveNoteEvents();
-// addArchiveRowsEvents();
-
-function debounce(fn, delay = 250) {
-   let timer = null;
-
-   if (delay === 0) {
-      return fn;
-   }
-
-   return function () {
-      clearTimeout(timer);
-      timer = setTimeout(function () {
-         fn.apply(this);
-      }, delay);
-   };
-}
 
 function addArchiveRowsEvents() {
    const archivedTableBody = document.querySelector('.archived-table-body');
@@ -148,6 +166,10 @@ function addArchiveRowsEvents() {
          todos = todos.concat(currentTodo);
          // currentRow.remove();
          renderNewRow(currentTodo[0]);
+         // const index =  Array.from(categoriesTableRows).findIndex(row => row.dataset.name === )
+         // categories[currentTodo[0].category].active++;
+         categories[currentTodo[0].category].archived--;
+         renderCategories();
 
          addArchiveNoteEvents();
          archivedRow.remove();
@@ -208,17 +230,20 @@ function renderNewRow(newTodo) {
          name: '',
          created: new Date().toLocaleDateString('en-US', options),
          // category: todos[0].category,
-         category: Object.keys(categories)[0],
+         category: Object.keys(categoriesMap)[0],
          content,
          dates: '',
          command: '',
       });
    }
 
+    categories[todos[todos.length - 1].category].active++;
+    renderCategories();
+
    const todoFields = Object.keys(todos[0]);
    const addedTodo = todos[todos.length - 1];
 
-   let str = `<tr data-content="${content}"><td class="first-column">${categories[addedTodo.category]}</td>`;
+   let str = `<tr data-content="${content}"><td class="first-column">${categoriesMap[addedTodo.category]}</td>`;
    for (let todoField of todoFields) {
       if (todoField === 'command') {
          str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
@@ -242,6 +267,9 @@ function addCreateNoteEvent() {
       archivedTable.classList.toggle('visible');
       renderNewRow(null);
       addArchiveNoteEvents();
+
+      
+
    });
 }
 
@@ -256,9 +284,12 @@ function addDeleteEvents() {
          const currentRow = event.target.parentElement.parentElement.parentElement;
 
          const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
-         todos.splice(currentTodoIndex, 1);
+         const currentTodo = todos.splice(currentTodoIndex, 1);
          console.log(todos);
          currentRow.remove();
+
+          categories[currentTodo[0].category].active--;
+          renderCategories();
       });
    });
 }

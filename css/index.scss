@@ -63,7 +63,8 @@ i {
 }
 
 .table,
-.archived-table {
+.archived-table,
+.categories-table {
     border-collapse: collapse;
     margin: 0 auto;
     margin-top: 20px;
@@ -124,6 +125,7 @@ i {
             }
 
             &.first-column {
+                // &:first-child {
                 width: 20px;
                 padding-left: 2px;
                 background-color: #ced7e488;
@@ -145,5 +147,17 @@ i {
 
     tr {
         border-top: 3px solid #000000;
+    }
+}
+.categories-table {
+    .center {
+        text-align: center;
+    }
+    tbody tr td input {
+        text-align: center;
+       
+    }
+    tbody tr td:nth-child(3n + 1) input {
+        text-align: left;
     }
 }

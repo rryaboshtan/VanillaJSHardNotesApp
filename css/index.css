@@ -78,7 +78,8 @@ i.first-row {
 }
 
 .table,
-.archived-table {
+.archived-table,
+.categories-table {
   border-collapse: collapse;
   margin: 0 auto;
   margin-top: 20px;
@@ -87,30 +88,35 @@ i.first-row {
 }
 
 .table thead tr,
-.archived-table thead tr {
+.archived-table thead tr,
+.categories-table thead tr {
   padding: 0;
   margin: 0;
   background-color: #999999;
 }
 
 .table thead tr td,
-.archived-table thead tr td {
+.archived-table thead tr td,
+.categories-table thead tr td {
   color: #fff;
   padding-left: 10px;
 }
 
 .table thead tr td.first-column,
-.archived-table thead tr td.first-column {
+.archived-table thead tr td.first-column,
+.categories-table thead tr td.first-column {
   background-color: #999999;
 }
 
 .table thead tr td.command,
-.archived-table thead tr td.command {
+.archived-table thead tr td.command,
+.categories-table thead tr td.command {
   background-color: #999999;
 }
 
 .table tr,
-.archived-table tr {
+.archived-table tr,
+.categories-table tr {
   height: 30px;
   margin-top: 20px;
   border: none;
@@ -120,7 +126,8 @@ i.first-row {
 }
 
 .table tr td,
-.archived-table tr td {
+.archived-table tr td,
+.categories-table tr td {
   border: none;
   text-align: left;
   width: 130px;
@@ -130,7 +137,8 @@ i.first-row {
 }
 
 .table tr td.command,
-.archived-table tr td.command {
+.archived-table tr td.command,
+.categories-table tr td.command {
   text-align: right;
   padding-right: 10px;
   width: 75px;
@@ -138,7 +146,8 @@ i.first-row {
 }
 
 .table tr td input,
-.archived-table tr td input {
+.archived-table tr td input,
+.categories-table tr td input {
   width: 132px;
   font-size: 14px;
   outline: none;
@@ -149,12 +158,14 @@ i.first-row {
 }
 
 .table tr td input:not(:disabled),
-.archived-table tr td input:not(:disabled) {
+.archived-table tr td input:not(:disabled),
+.categories-table tr td input:not(:disabled) {
   color: #000000ff;
 }
 
 .table tr td.first-column,
-.archived-table tr td.first-column {
+.archived-table tr td.first-column,
+.categories-table tr td.first-column {
   width: 20px;
   padding-left: 2px;
   background-color: #ced7e488;
@@ -172,4 +183,16 @@ i.first-row {
 
 .archived-table tr {
   border-top: 3px solid #000000;
+}
+
+.categories-table .center {
+  text-align: center;
+}
+
+.categories-table tbody tr td input {
+  text-align: center;
+}
+
+.categories-table tbody tr td:nth-child(3n + 1) input {
+  text-align: left;
 }
