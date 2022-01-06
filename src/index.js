@@ -95,6 +95,13 @@ function renderTodoList(todos) {
             str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
                <button><i class="fas fa-archive"></i></button>
                <button><i class="fas fa-trash"></i></button></td>`;
+         } else if (todoField === 'category') {
+            str += `<td>
+                     <select data-field="${todoField}"> 
+                        <option value="value1" selected>Task</option>
+                        <option value="value2">Random Thought</option>
+                        <option value="value3">Idea</option>
+                     </select></td>`;
          } else {
             str += `<td><input data-field="${todoField}" type="text" disabled value="${todo[todoField]}"></td>`;
          }
@@ -146,10 +153,6 @@ addEditEvents();
 addDeleteEvents();
 addCreateNoteEvent();
 
-// const categoriesTableRows = document.querySelectorAll('.categories-table-body input[data-field]');
-// console.log(categoriesTableRows);
-// const activeCategoriesInputs = document.querySelectorAll('.categories-table-body input[data-field="active"]');
-// const archiveCategoriesInputs = document.querySelectorAll('.categories-table-body input[data-field="archived"]');
 addArchiveNoteEvents();
 
 function addArchiveRowsEvents() {
@@ -166,8 +169,6 @@ function addArchiveRowsEvents() {
          todos = todos.concat(currentTodo);
          // currentRow.remove();
          renderNewRow(currentTodo[0]);
-         // const index =  Array.from(categoriesTableRows).findIndex(row => row.dataset.name === )
-         // categories[currentTodo[0].category].active++;
          categories[currentTodo[0].category].archived--;
          renderCategories();
 
@@ -237,8 +238,8 @@ function renderNewRow(newTodo) {
       });
    }
 
-    categories[todos[todos.length - 1].category].active++;
-    renderCategories();
+   categories[todos[todos.length - 1].category].active++;
+   renderCategories();
 
    const todoFields = Object.keys(todos[0]);
    const addedTodo = todos[todos.length - 1];
@@ -267,9 +268,6 @@ function addCreateNoteEvent() {
       archivedTable.classList.toggle('visible');
       renderNewRow(null);
       addArchiveNoteEvents();
-
-      
-
    });
 }
 
@@ -288,8 +286,8 @@ function addDeleteEvents() {
          console.log(todos);
          currentRow.remove();
 
-          categories[currentTodo[0].category].active--;
-          renderCategories();
+         categories[currentTodo[0].category].active--;
+         renderCategories();
       });
    });
 }
@@ -329,7 +327,7 @@ function addEditEvents() {
                }
                console.log(currentRow);
                const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
-               //  todos.splice(currentTodoIndex, 1);
+
                todos[currentTodoIndex][input.dataset.field] = event.target.value;
                if (input.dataset.field === 'content') {
                   currentRow.dataset.content = event.target.value;

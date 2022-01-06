@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto&family=Poppins&display=swap");
 div {
   font-size: 15;
 }
@@ -30,7 +31,7 @@ button.create-note {
 }
 
 body {
-  font-size: 17;
+  font-size: 16;
 }
 
 i {
@@ -83,7 +84,7 @@ i.first-row {
   border-collapse: collapse;
   margin: 0 auto;
   margin-top: 20px;
-  font-size: 20px;
+  font-size: 16px;
   border: none;
 }
 
@@ -130,10 +131,15 @@ i.first-row {
 .categories-table tr td {
   border: none;
   text-align: left;
-  width: 130px;
+  width: 120px;
   padding: 0;
   margin: 0;
-  color: #ccc4c4;
+}
+
+.table tr td:has(select),
+.archived-table tr td:has(select),
+.categories-table tr td:has(select) {
+  background-color: #ced7e488;
 }
 
 .table tr td.command,
@@ -145,10 +151,19 @@ i.first-row {
   background-color: #ced7e488;
 }
 
+.table tr td select,
+.archived-table tr td select,
+.categories-table tr td select {
+  width: 160px;
+}
+
 .table tr td input,
+.table tr td select,
 .archived-table tr td input,
-.categories-table tr td input {
-  width: 132px;
+.archived-table tr td select,
+.categories-table tr td input,
+.categories-table tr td select {
+  width: 142px;
   font-size: 14px;
   outline: none;
   border: none;
@@ -158,8 +173,11 @@ i.first-row {
 }
 
 .table tr td input:not(:disabled),
+.table tr td select:not(:disabled),
 .archived-table tr td input:not(:disabled),
-.categories-table tr td input:not(:disabled) {
+.archived-table tr td select:not(:disabled),
+.categories-table tr td input:not(:disabled),
+.categories-table tr td select:not(:disabled) {
   color: #000000ff;
 }
 
@@ -183,6 +201,12 @@ i.first-row {
 
 .archived-table tr {
   border-top: 3px solid #000000;
+}
+
+.categories-table {
+  position: absolute;
+  top: 350px;
+  left: 350px;
 }
 
 .categories-table .center {

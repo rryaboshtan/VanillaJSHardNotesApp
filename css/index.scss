@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&family=Poppins&display=swap');
 div {
     font-size: 15;
 }
@@ -25,7 +26,7 @@ button {
     padding: 0;
 }
 body {
-    font-size: 17;
+    font-size: 16;
 }
 i {
     font-size: 22px;
@@ -68,7 +69,7 @@ i {
     border-collapse: collapse;
     margin: 0 auto;
     margin-top: 20px;
-    font-size: 20px;
+    font-size: 16px;
     border: none;
 
     thead tr {
@@ -99,10 +100,13 @@ i {
         td {
             border: none;
             text-align: left;
-            width: 130px;
+            width: 120px;
             padding: 0;
             margin: 0;
-            color: #ccc4c4;
+            // color: #ccc4c4;
+            &:has(select) {
+                background-color: #ced7e488;
+            }
 
             &.command {
                 text-align: right;
@@ -111,8 +115,13 @@ i {
                 background-color: #ced7e488;
             }
 
-            input {
-                width: 132px;
+            select {
+                width: 160px;
+            }
+            input,
+            select {
+                // color: #777a7e;
+                width: 142px;
                 font-size: 14px;
                 outline: none;
                 border: none;
@@ -150,12 +159,15 @@ i {
     }
 }
 .categories-table {
+    position: absolute;
+    top: 350px;
+    left: 350px;
+    // margin: 0 auto;
     .center {
         text-align: center;
     }
     tbody tr td input {
         text-align: center;
-       
     }
     tbody tr td:nth-child(3n + 1) input {
         text-align: left;
