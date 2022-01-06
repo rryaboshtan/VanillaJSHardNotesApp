@@ -117,6 +117,12 @@ i.first-row {
   background-color: #999999;
 }
 
+.table tbody tr td select:disabled,
+.archived-table tbody tr td select:disabled,
+.categories-table tbody tr td select:disabled {
+  color: #000000;
+}
+
 .table tr,
 .archived-table tr,
 .categories-table tr {
@@ -172,15 +178,6 @@ i.first-row {
   padding-left: 8px;
   height: 26px;
   background-color: #ced7e488;
-}
-
-.table tr td input:not(:disabled),
-.table tr td select:not(:disabled),
-.archived-table tr td input:not(:disabled),
-.archived-table tr td select:not(:disabled),
-.categories-table tr td input:not(:disabled),
-.categories-table tr td select:not(:disabled) {
-  color: #000000ff;
 }
 
 .table tr td.first-column,

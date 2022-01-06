@@ -90,6 +90,12 @@ i {
             }
         }
     }
+    tbody tr td select {
+        &:disabled {
+            // color: rgb(88, 86, 86);
+            color: #000000;
+        }
+    }
 
     tr {
         height: 30px;
@@ -130,8 +136,13 @@ i {
                 padding-left: 8px;
                 height: 26px;
                 background-color: #ced7e488;
-                &:not(:disabled) {
-                    color: #000000ff;
+                // &:not(:disabled) {
+                    // color: #000000ff;
+                // }
+                &:disabled {
+                    // background-color: #000;
+                // color: #ced7e488;
+
                 }
             }
 
