@@ -1,6 +1,6 @@
 const options = { month: 'long', day: 'numeric', year: 'numeric' };
 let count = 0;
-let todos = [
+let notes = [
    {
       name: 'Shopping list',
       created: new Date().toLocaleDateString('en-US', options),
@@ -43,7 +43,7 @@ let todos = [
    },
 ];
 
-let archivedTodos = [];
+let archivedNotes = [];
 
 const categoriesMap = {
    Task: '<div class="round-fon"><i class="fas fa-shopping-cart head"></i></div>',
@@ -67,7 +67,7 @@ const categories = {
    },
 };
 
-console.log(todos);
+console.log(notes);
 function renderCategories() {
    const tbody = document.querySelector('.categories-table-body');
    tbody.innerHTML = '';
@@ -83,37 +83,37 @@ function renderCategories() {
    console.log(tbody);
 }
 
-function renderTodoList(todos) {
+function renderNoteList(notes) {
    const tbody = document.querySelector('.table-body');
    tbody.innerHTML = '';
    let str = '';
-   for (let todo of todos) {
-      Object.defineProperty(todo, 'id', {
+   for (let note of notes) {
+      Object.defineProperty(note, 'id', {
          enumerable: false,
          configurable: false,
          writable: true,
          value: Math.random() * 200,
       });
 
-      const todoFields = Object.keys(todo);
-      str += `<tr data-id="${todo.id}"><td class="first-column">${categoriesMap[todo.category]}</td>`;
-      for (let todoField of todoFields) {
-         if (todoField === 'command') {
+      const noteFields = Object.keys(note);
+      str += `<tr data-id="${note.id}"><td class="first-column">${categoriesMap[note.category]}</td>`;
+      for (let noteField of noteFields) {
+         if (noteField === 'command') {
             str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
                <button><i class="fas fa-archive"></i></button>
                <button><i class="fas fa-trash"></i></button></td>`;
-         } else if (todoField === 'category') {
+         } else if (noteField === 'category') {
             str += `<td>
-                     <select data-field="${todoField}" disabled> 
+                     <select data-field="${noteField}" disabled> 
                      
-                        <option value="Task" ${todo[todoField] === 'Task' ? 'selected' : ''}>Task</option>
+                        <option value="Task" ${note[noteField] === 'Task' ? 'selected' : ''}>Task</option>
                         <option value="Random Thought" ${
-                           todo[todoField] === 'Random Thought' ? 'selected' : ''
+                           note[noteField] === 'Random Thought' ? 'selected' : ''
                         }>Random Thought</option>
-                        <option value="Idea" ${todo[todoField] === 'Idea' ? 'selected' : ''}>Idea</option>
+                        <option value="Idea" ${note[noteField] === 'Idea' ? 'selected' : ''}>Idea</option>
                      </select></td>`;
          } else {
-            str += `<td><input data-field="${todoField}" type="text" disabled value="${todo[todoField]}"></td>`;
+            str += `<td><input data-field="${noteField}" type="text" disabled value="${note[noteField]}"></td>`;
          }
       }
       str += `</tr>`;
@@ -122,18 +122,18 @@ function renderTodoList(todos) {
    console.log(tbody);
 }
 
-function renderArchivedTodoList(archivedTodos) {
+function renderArchivedNoteList(archivedNotes) {
    const tbody = document.querySelector('.archived-table-body');
    tbody.innerHTML = '';
    let str = '';
-   for (let todo of archivedTodos) {
-      const todoFields = Object.keys(todo);
-      str += `<tr data-id="${todo.id}"><td class="first-column">${categoriesMap[todo.category]}</td>`;
-      for (let todoField of todoFields) {
-         if (todoField === 'command') {
+   for (let note of archivedNotes) {
+      const noteFields = Object.keys(note);
+      str += `<tr data-id="${note.id}"><td class="first-column">${categoriesMap[note.category]}</td>`;
+      for (let noteField of noteFields) {
+         if (noteField === 'command') {
             str += '';
          } else {
-            str += `<td><input data-field="${todoField}" type="text" disabled value="${todo[todoField]}"></td>`;
+            str += `<td><input data-field="${noteField}" type="text" disabled value="${note[noteField]}"></td>`;
          }
       }
       str += `</tr>`;
@@ -146,27 +146,28 @@ function renderArchivedTodoList(archivedTodos) {
 const onArchiveClick = event => {
    const currentRow = event.target.parentElement.parentElement.parentElement;
 
-   const currentTodoIndex = todos.findIndex(todo => todo.id.toString() === currentRow.dataset.id);
-   const currentTodo = todos.splice(currentTodoIndex, 1);
-   archivedTodos = archivedTodos.concat(currentTodo);
+   const currentNoteIndex = notes.findIndex(note => note.id.toString() === currentRow.dataset.id);
+   const currentNote = notes.splice(currentNoteIndex, 1);
+   archivedNotes = archivedNotes.concat(currentNote);
 
-   const lastArchivedTodo = archivedTodos[archivedTodos.length - 1];
-   Object.defineProperty(lastArchivedTodo, 'id', {
+   const lastArchivedNote = archivedNotes[archivedNotes.length - 1];
+   Object.defineProperty(lastArchivedNote, 'id', {
       enumerable: false,
       configurable: false,
       writable: true,
-      value: currentTodo.id,
+      value: currentNote.id,
    });
 
-   console.log(archivedTodos);
+   console.log(archivedNotes);
 
-   categories[currentTodo[0].category].active--;
-   categories[currentTodo[0].category].archived++;
+   categories[currentNote[0].category].active--;
+   categories[currentNote[0].category].archived++;
    initSelectEvents();
    renderCategories();
+   // renderNoteList(notes);
    currentRow.remove();
 };
-renderTodoList(todos);
+renderNoteList(notes);
 renderCategories();
 initEditEvents();
 initDeleteEvents();
@@ -176,33 +177,33 @@ initArchiveNoteEvents();
 
 function initSelectEvents() {
    const selectItems = document.querySelectorAll('select');
-   let oldCategory = null;
 
    selectItems.forEach(selectItem => {
-      selectItem.addEventListener('click', event => {
-         oldCategory = event.target.value;
-      });
+      // selectItem.addEventListener('click', event => {
+      //    oldCategory = event.target.value;
+      // });
 
       selectItem.addEventListener('change', event => {
-         console.log('event.target.value', event.target.value);
+         // console.log('event.target.value', event.target.value);
+         console.log('event add................ ');
          const currentRow = event.target.parentElement.parentElement;
 
-         const currentTodoIndex = todos.findIndex(todo => todo.id.toString() === currentRow.dataset.id);
-         // const currentTodo = archivedTodos.splice(currentTodoIndex, 1);
-         const oldCategory = todos[currentTodoIndex].category;
+         const currentNoteIndex = notes.findIndex(note => note.id.toString() === currentRow.dataset.id);
+         // const currentNote = archivedNotes.splice(currentNoteIndex, 1);
+         const oldCategory = notes[currentNoteIndex].category;
 
-         todos[currentTodoIndex].category = event.target.value;
+         notes[currentNoteIndex].category = event.target.value;
 
-         //   console.log(todos);
-         //   todos = todos.concat(currentTodo);
+         //   console.log(notes);
+         //   notes = notes.concat(currentNote);
          // currentRow.remove();
-         //   renderNewRow(currentTodo[0]);
-         // categories[currentTodo[0].category].archived--;
+         //   renderNewRow(currentNote[0]);
+         // categories[currentNote[0].category].archived--;
          categories[oldCategory].active--;
-         categories[todos[currentTodoIndex].category].active++;
+         categories[notes[currentNoteIndex].category].active++;
          // Change first td icon according to the new category
-         currentRow.children[0].innerHTML = categoriesMap[todos[currentTodoIndex].category];
-         // renderTodoList(todos);
+         currentRow.children[0].innerHTML = categoriesMap[notes[currentNoteIndex].category];
+         // renderNoteList(notes);
          renderCategories();
 
          // initArchiveNoteEvents();
@@ -219,16 +220,18 @@ function initArchiveRowsEvents() {
       archivedRow.addEventListener('click', event => {
          const currentRow = event.target.parentElement.parentElement;
 
-         const currentArchivedTodoIndex = archivedTodos.findIndex(todo => todo.content === currentRow.dataset.content);
-         const currentTodo = archivedTodos.splice(currentArchivedTodoIndex, 1);
-         console.log(todos);
-         // todos = todos.concat(currentTodo);
+         const currentArchivedNoteIndex = archivedNotes.findIndex(note => note.content === currentRow.dataset.content);
+         const currentNote = archivedNotes.splice(currentArchivedNoteIndex, 1);
+         console.log('currentNote.id = ', currentNote.id);
+         // console.log(notes);
+         // notes = notes.concat(currentNote);
          // currentRow.remove();
-         renderNewRow(currentTodo[0]);
-         categories[currentTodo[0].category].archived--;
+
+         renderNewRow(currentNote[0]);
+         categories[currentNote[0].category].archived--;
          renderCategories();
 
-         initSelectEvents();
+         // initSelectEvents();
          initArchiveNoteEvents();
          archivedRow.remove();
       });
@@ -237,7 +240,7 @@ function initArchiveRowsEvents() {
          archivedRow.style.backgroundColor = '#777777';
       });
 
-      archivedRow.addEventListener('mouseenter', event => {
+      archivedRow.addEventListener('mouseenter', () => {
          console.log('MouseEnter');
          archivedRow.style.backgroundColor = '#ffffff';
       });
@@ -260,28 +263,28 @@ function initArchiveNoteEvents() {
    archiveAllIcon.addEventListener('click', () => {
       console.log('Archiveicon click');
       const archivedTable = document.querySelector('.archived-table');
-      console.log('archivedTodos.length', archivedTodos.length);
-      if (archivedTodos.length > 0) {
+      console.log('archivedNotes.length', archivedNotes.length);
+      if (archivedNotes.length > 0) {
          if (count === 1) {
             archivedTable.classList.toggle('visible');
          }
          archivedTable.classList.toggle('visible');
 
-         renderArchivedTodoList(archivedTodos);
+         renderArchivedNoteList(archivedNotes);
          initArchiveRowsEvents();
       }
    });
 }
 
-function renderNewRow(newTodo) {
+function renderNewRow(newNote) {
    const tbody = document.querySelector('.table-body');
 
    const content = 'Some data' + parseInt(Math.random() * 200);
 
-   if (newTodo) {
-      todos.push(newTodo);
+   if (newNote) {
+      notes.push(newNote);
    } else {
-      todos.push({
+      notes.push({
          name: '',
          created: new Date().toLocaleDateString('en-US', options),
          category: Object.keys(categoriesMap)[0],
@@ -289,43 +292,45 @@ function renderNewRow(newTodo) {
          dates: '',
          command: '',
       });
-        Object.defineProperty(todos[todos.length - 1], 'id', {
-           enumerable: false,
-           configurable: false,
-           writable: true,
-           value: Math.random() * 200,
-        });
    }
 
-   categories[todos[todos.length - 1].category].active++;
-   console.log(todos);
+   const addedNote = notes[notes.length - 1];
+   Object.defineProperty(addedNote, 'id', {
+      enumerable: false,
+      configurable: false,
+      writable: true,
+      value: Math.random() * 200,
+   });
+
+   categories[addedNote.category].active++;
+   console.log(notes);
    renderCategories();
 
-   const todoFields = Object.keys(todos[0]);
-   const addedTodo = todos[todos.length - 1];
+   const noteFields = Object.keys(notes[0]);
 
-   let str = `<tr data-content="${addedTodo.id}"><td class="first-column">${categoriesMap[addedTodo.category]}</td>`;
-   for (let todoField of todoFields) {
-      if (todoField === 'command') {
+   let str = `<tr data-id="${addedNote.id}"><td class="first-column">${categoriesMap[addedNote.category]}</td>`;
+   for (let noteField of noteFields) {
+      if (noteField === 'command') {
          str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
                <button><i class="fas fa-archive"></i></button>
                <button><i class="fas fa-trash"></i></button></td>`;
-      } else if (todoField === 'category') {
+      } else if (noteField === 'category') {
          str += `<td>
-                     <select data-field="${todoField}" disabled> 
-                        <option value="Task" ${addedTodo[todoField] === 'Task' ? 'selected' : ''}>Task</option>
+                     <select data-field="${noteField}" disabled> 
+                        <option value="Task" ${addedNote[noteField] === 'Task' ? 'selected' : ''}>Task</option>
                         <option value="Random Thought" ${
-                           addedTodo[todoField] === 'Random Thought' ? 'selected' : ''
+                           addedNote[noteField] === 'Random Thought' ? 'selected' : ''
                         }>Random Thought</option>
-                        <option value="Idea" ${addedTodo[todoField] === 'Idea' ? 'selected' : ''}>Idea</option>
+                        <option value="Idea" ${addedNote[noteField] === 'Idea' ? 'selected' : ''}>Idea</option>
                      </select></td>`;
       } else {
-         str += `<td><input data-field="${todoField}" type="text" disabled value="${addedTodo[todoField]}"></td>`;
+         str += `<td><input data-field="${noteField}" type="text" disabled value="${addedNote[noteField]}"></td>`;
       }
    }
    str += `</tr>`;
    tbody.innerHTML += str;
 
+   initSelectEvents();
    initEditEvents();
    initDeleteEvents();
 }
@@ -351,12 +356,12 @@ function initDeleteEvents() {
       deleteButton.addEventListener('click', event => {
          const currentRow = event.target.parentElement.parentElement.parentElement;
 
-         const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
-         const currentTodo = todos.splice(currentTodoIndex, 1);
-         console.log(todos);
+         const currentNoteIndex = notes.findIndex(note => note.content === currentRow.dataset.content);
+         const currentNote = notes.splice(currentNoteIndex, 1);
+         console.log(notes);
          currentRow.remove();
 
-         categories[currentTodo[0].category].active--;
+         categories[currentNote[0].category].active--;
          renderCategories();
       });
    });
@@ -396,14 +401,14 @@ function initEditEvents() {
                //    currentRow.dataset.content = oldValue;
                // }
                // console.log(currentRow);
-               const currentTodoIndex = todos.findIndex(todo => todo.id.toString() === currentRow.dataset.id);
+               const currentNoteIndex = notes.findIndex(note => note.id.toString() === currentRow.dataset.id);
 
-               todos[currentTodoIndex][input.dataset.field] = event.target.value;
+               notes[currentNoteIndex][input.dataset.field] = event.target.value;
                // if (input.dataset.field === 'content') {
-                  // currentRow.dataset.content = event.target.value;
-                  // oldValue = event.target.value;
+               // currentRow.dataset.content = event.target.value;
+               // oldValue = event.target.value;
                // }
-               console.log(todos);
+               console.log(notes);
             });
          });
       });
