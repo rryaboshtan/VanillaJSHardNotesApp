@@ -98,9 +98,11 @@ function renderTodoList(todos) {
          } else if (todoField === 'category') {
             str += `<td>
                      <select data-field="${todoField}" disabled> 
-                        <option value="value1" selected>Task</option>
-                        <option value="value2">Random Thought</option>
-                        <option value="value3">Idea</option>
+                        <option value="Task" ${todo[todoField] === 'Task' ? 'select' : ''}>Task</option>
+                        <option value="Random Thought" ${
+                           todo[todoField] === 'Random Thought' ? 'select' : ''
+                        }>Random Thought</option>
+                        <option value="Idea" ${todo[todoField] === 'Idea' ? 'select' : ''}>Idea</option>
                      </select></td>`;
          } else {
             str += `<td><input data-field="${todoField}" type="text" disabled value="${todo[todoField]}"></td>`;
@@ -122,13 +124,6 @@ function renderArchivedTodoList(archivedTodos) {
       for (let todoField of todoFields) {
          if (todoField === 'command') {
             str += '';
-         } else if (todoField === 'category') {
-            str += `<td>
-                     <select data-field="${todoField}" disabled> 
-                        <option value="value1" selected>Task</option>
-                        <option value="value2">Random Thought</option>
-                        <option value="value3">Idea</option>
-                     </select></td>`;
          } else {
             str += `<td><input data-field="${todoField}" type="text" disabled value="${todo[todoField]}"></td>`;
          }
@@ -151,6 +146,7 @@ const onArchiveClick = event => {
 
    categories[currentTodo[0].category].active--;
    categories[currentTodo[0].category].archived++;
+   initSelectEvents();
    renderCategories();
    currentRow.remove();
 };
@@ -163,10 +159,10 @@ initSelectEvents();
 initArchiveNoteEvents();
 
 function initSelectEvents() {
-   const selectItems = document.querySelectorAll('option');
+   const selectItems = document.querySelectorAll('select');
    let oldCategory = null;
 
-   selectItems.forEach(selectItems);
+   
 
    selectItems.forEach(selectItem => {
       selectItem.addEventListener('click', event => {
@@ -174,14 +170,15 @@ function initSelectEvents() {
       });
 
       selectItem.addEventListener('change', event => {
+         console.log('event.target.value', event.target.value);
          const currentRow = event.target.parentElement.parentElement;
 
-         const currentTodoIndex = archivedTodos.findIndex(todo => todo.content === currentRow.dataset.content);
-         const currentTodo = archivedTodos.splice(currentTodoIndex, 1);
+         const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
+         // const currentTodo = archivedTodos.splice(currentTodoIndex, 1);
          const oldCategory = todos[currentTodoIndex].category;
 
          todos[currentTodoIndex].category = event.target.value;
-         
+
          //   console.log(todos);
          //   todos = todos.concat(currentTodo);
          // currentRow.remove();
@@ -189,11 +186,13 @@ function initSelectEvents() {
          // categories[currentTodo[0].category].archived--;
          categories[oldCategory].active--;
          categories[todos[currentTodoIndex].category].active++;
-         renderTodoList(todos);
+         // Change first td icon according to the new category
+         currentRow.children[0].innerHTML = categoriesMap[todos[currentTodoIndex].category];
+         // renderTodoList(todos);
          renderCategories();
 
-         initArchiveNoteEvents();
-         archivedRow.remove();
+         // initArchiveNoteEvents();
+         // archivedRow.remove();
       });
    });
 }
@@ -215,7 +214,8 @@ function initArchiveRowsEvents() {
          categories[currentTodo[0].category].archived--;
          renderCategories();
 
-         addArchiveNoteEvents();
+         initSelectEvents();
+         initArchiveNoteEvents();
          archivedRow.remove();
       });
 
@@ -293,9 +293,11 @@ function renderNewRow(newTodo) {
       } else if (todoField === 'category') {
          str += `<td>
                      <select data-field="${todoField}" disabled> 
-                        <option value="value1" selected>Task</option>
-                        <option value="value2">Random Thought</option>
-                        <option value="value3">Idea</option>
+                        <option value="Task" ${todoFields[todoField] === 'Task' ? 'select' : ''}>Task</option>
+                        <option value="Random Thought" ${
+                           todoFields[todoField] === 'Random Thought' ? 'select' : ''
+                        }>Random Thought</option>
+                        <option value="Idea" ${todoFields[todoField] === 'Idea' ? 'select' : ''}>Idea</option>
                      </select></td>`;
       } else {
          str += `<td><input data-field="${todoField}" type="text" disabled value="${addedTodo[todoField]}"></td>`;
@@ -315,6 +317,7 @@ function initCreateNoteEvent() {
       archivedTable.classList.toggle('visible');
       renderNewRow(null);
       initArchiveNoteEvents();
+      initSelectEvents();
    });
 }
 
