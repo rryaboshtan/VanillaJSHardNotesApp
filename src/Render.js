@@ -11,6 +11,10 @@ class Render {
       Quote: '<div class="round-fon"><i class="fas fa-quote-right head"></i></div>',
    };
 
+   getCategoriesMap() {
+      return this.#categoriesMap;
+   }
+
    renderCategories(categories) {
       const tbody = document.querySelector('.categories-table-body');
       tbody.innerHTML = '';

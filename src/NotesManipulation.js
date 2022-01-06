@@ -1,6 +1,7 @@
 import Render from './Render.js';
-import { notes, categories, options} from './data.js';
+import { notes, categories, options } from './data.js';
 import defineIdProperty from './helper.js';
+import { ARCHIVED_ROW_COLOR, ACTIVE_ELEMENT_COLOR, DISABLED_ELEMENT_COLOR } from './config.js';
 
 class NotesManipulation {
    constructor(notes, archivedNotes, categories, render) {
@@ -8,36 +9,19 @@ class NotesManipulation {
       this.archivedNotes = archivedNotes;
       this.categories = categories;
       this.render = render;
-     
+      this.categoriesMap = render.getCategoriesMap();
    }
    #count = 0;
 
-   #categoriesMap = {
-      Task: '<div class="round-fon"><i class="fas fa-shopping-cart head"></i></div>',
-      Idea: '<div class="round-fon"><i class="far fa-lightbulb head"></i></div>',
-      'Random Thought': '<div class="round-fon"><i class="fas fa-user-md head"></i></div>',
-      Quote: '<div class="round-fon"><i class="fas fa-quote-right head"></i></div>',
-   };
    init() {
       console.log(this.notes);
       this.render.renderNoteList(this.notes);
-       console.log(this.notes);
       this.render.renderCategories(this.categories);
-       console.log(this.notes);
       this.initEditEvents();
-       console.log(this.notes);
       this.initDeleteEvents();
-       console.log(this.notes);
-
       this.initCreateNoteEvent();
-       console.log(this.notes);
-
       this.initSelectEvents();
-       console.log(this.notes);
-
       this.initArchiveNoteEvents();
-       console.log(this.notes);
-
    }
 
    onAllArchiveShow = () => {
@@ -51,7 +35,7 @@ class NotesManipulation {
          this.render.renderArchivedNoteList(this.archivedNotes);
          this.initArchiveRowsEvents();
       }
-   }
+   };
    onDeleteNote = event => {
       const currentRow = event.target.parentElement.parentElement.parentElement;
 
@@ -61,7 +45,7 @@ class NotesManipulation {
 
       this.categories[currentNote[0].category].active--;
       this.render.renderCategories(this.categories);
-   }
+   };
 
    onArchiveClick = event => {
       const currentRow = event.target.parentElement.parentElement.parentElement;
@@ -78,7 +62,7 @@ class NotesManipulation {
       this.initSelectEvents();
       this.render.renderCategories(this.categories);
       currentRow.remove();
-   }
+   };
 
    onArchivedRowClick = event => {
       const currentRow = event.target.parentElement.parentElement;
@@ -92,7 +76,7 @@ class NotesManipulation {
 
       this.initArchiveNoteEvents();
       currentRow.remove();
-   }
+   };
 
    initSelectEvents() {
       const selectItems = document.querySelectorAll('select');
@@ -109,8 +93,7 @@ class NotesManipulation {
             this.categories[oldCategory].active--;
             this.categories[this.notes[currentNoteIndex].category].active++;
             // Change first td icon according to the new category
-            currentRow.children[0].innerHTML = this.#categoriesMap[this.notes[currentNoteIndex].category];
-            // renderNoteList(this.notes);
+            currentRow.children[0].innerHTML = this.categoriesMap[this.notes[currentNoteIndex].category];
             this.render.renderCategories(this.categories);
          });
       });
@@ -124,11 +107,11 @@ class NotesManipulation {
          archivedRow.addEventListener('click', this.onArchivedRowClick);
 
          archivedRow.addEventListener('mouseleave', () => {
-            archivedRow.style.backgroundColor = '#777777';
+            archivedRow.style.backgroundColor = ARCHIVED_ROW_COLOR;
          });
 
          archivedRow.addEventListener('mouseenter', () => {
-            archivedRow.style.backgroundColor = '#ffffff';
+            archivedRow.style.backgroundColor = ACTIVE_ELEMENT_COLOR;
          });
       });
    }
@@ -206,9 +189,7 @@ class NotesManipulation {
       editButtons.forEach(editButton => {
          editButton.addEventListener('click', event => {
             isEditMode = !isEditMode;
-            // const tbody = document.querySelector('.table-body');
             const currentRow = event.target.parentElement.parentElement.parentElement;
-            // let oldValue = null;
             const inputs = currentRow.querySelectorAll('input, select');
 
             inputs.forEach(input => {
@@ -221,11 +202,11 @@ class NotesManipulation {
    setInputEvents(input, isEditMode) {
       if (!isEditMode) {
          input.setAttribute('disabled', 'disabled');
-         input.style.backgroundColor = '#ced7e488';
+         input.style.backgroundColor = DISABLED_ELEMENT_COLOR;
          return;
       }
       input.removeAttribute('disabled');
-      input.style.backgroundColor = '#ffffff';
+      input.style.backgroundColor = ACTIVE_ELEMENT_COLOR;
 
       input.addEventListener('click', event => {
          if (event.target.dataset.field === 'content') {

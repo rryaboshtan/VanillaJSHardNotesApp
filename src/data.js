@@ -7,7 +7,7 @@ let notes = [
       category: 'Task',
       content: 'tomatoes, bread',
       dates: '',
-      command: 'sdfd',
+      command: '',
    },
    {
       name: 'The theory of evolution',
@@ -15,7 +15,7 @@ let notes = [
       category: 'Random Thought',
       content: 'The evolution...',
       dates: '',
-      command: 'sdfd',
+      command: '',
    },
    {
       name: 'New feature',
@@ -23,7 +23,7 @@ let notes = [
       category: 'Idea',
       content: 'Implement new...',
       dates: '3/5/2021, 5/5/2021',
-      command: 'sdfd',
+      command: '',
    },
    {
       name: 'William Gaddis',
@@ -31,7 +31,7 @@ let notes = [
       category: 'Task',
       content: "Power doesn't co",
       dates: '',
-      command: 'sdfd',
+      command: '',
    },
    {
       name: 'Books',
@@ -40,6 +40,14 @@ let notes = [
       content: 'The Lean Startup',
       dates: '',
       command: 'sdfd',
+   },
+   {
+      name: 'Other Books',
+      created: new Date().toLocaleDateString('en-US', options),
+      category: 'Idea',
+      content: 'English learning',
+      dates: '3/1/2022, 5/3/2022',
+      command: '',
    },
 ];
 
