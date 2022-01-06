@@ -88,8 +88,15 @@ function renderTodoList(todos) {
    tbody.innerHTML = '';
    let str = '';
    for (let todo of todos) {
+      Object.defineProperty(todo, 'id', {
+         enumerable: false,
+         configurable: false,
+         writable: true,
+         value: Math.random() * 200,
+      });
+
       const todoFields = Object.keys(todo);
-      str += `<tr data-content="${todo.content}"><td class="first-column">${categoriesMap[todo.category]}</td>`;
+      str += `<tr data-id="${todo.id}"><td class="first-column">${categoriesMap[todo.category]}</td>`;
       for (let todoField of todoFields) {
          if (todoField === 'command') {
             str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
@@ -121,7 +128,7 @@ function renderArchivedTodoList(archivedTodos) {
    let str = '';
    for (let todo of archivedTodos) {
       const todoFields = Object.keys(todo);
-      str += `<tr data-content="${todo.content}"><td class="first-column">${categoriesMap[todo.category]}</td>`;
+      str += `<tr data-id="${todo.id}"><td class="first-column">${categoriesMap[todo.category]}</td>`;
       for (let todoField of todoFields) {
          if (todoField === 'command') {
             str += '';
@@ -139,9 +146,17 @@ function renderArchivedTodoList(archivedTodos) {
 const onArchiveClick = event => {
    const currentRow = event.target.parentElement.parentElement.parentElement;
 
-   const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
+   const currentTodoIndex = todos.findIndex(todo => todo.id.toString() === currentRow.dataset.id);
    const currentTodo = todos.splice(currentTodoIndex, 1);
    archivedTodos = archivedTodos.concat(currentTodo);
+
+   const lastArchivedTodo = archivedTodos[archivedTodos.length - 1];
+   Object.defineProperty(lastArchivedTodo, 'id', {
+      enumerable: false,
+      configurable: false,
+      writable: true,
+      value: currentTodo.id,
+   });
 
    console.log(archivedTodos);
 
@@ -172,7 +187,7 @@ function initSelectEvents() {
          console.log('event.target.value', event.target.value);
          const currentRow = event.target.parentElement.parentElement;
 
-         const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
+         const currentTodoIndex = todos.findIndex(todo => todo.id.toString() === currentRow.dataset.id);
          // const currentTodo = archivedTodos.splice(currentTodoIndex, 1);
          const oldCategory = todos[currentTodoIndex].category;
 
@@ -274,6 +289,12 @@ function renderNewRow(newTodo) {
          dates: '',
          command: '',
       });
+        Object.defineProperty(todos[todos.length - 1], 'id', {
+           enumerable: false,
+           configurable: false,
+           writable: true,
+           value: Math.random() * 200,
+        });
    }
 
    categories[todos[todos.length - 1].category].active++;
@@ -283,7 +304,7 @@ function renderNewRow(newTodo) {
    const todoFields = Object.keys(todos[0]);
    const addedTodo = todos[todos.length - 1];
 
-   let str = `<tr data-content="${addedTodo.content}"><td class="first-column">${categoriesMap[addedTodo.category]}</td>`;
+   let str = `<tr data-content="${addedTodo.id}"><td class="first-column">${categoriesMap[addedTodo.category]}</td>`;
    for (let todoField of todoFields) {
       if (todoField === 'command') {
          str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
@@ -370,18 +391,18 @@ function initEditEvents() {
             });
             input.addEventListener('change', event => {
                const currentRow = event.target.parentElement.parentElement;
-               if (input.dataset.field === 'content') {
-                  // currentRow.dataset.content = event.target.value;
-                  currentRow.dataset.content = oldValue;
-               }
+               // if (input.dataset.field === 'content') {
+               //    // currentRow.dataset.content = event.target.value;
+               //    currentRow.dataset.content = oldValue;
+               // }
                // console.log(currentRow);
-               const currentTodoIndex = todos.findIndex(todo => todo.content === currentRow.dataset.content);
+               const currentTodoIndex = todos.findIndex(todo => todo.id.toString() === currentRow.dataset.id);
 
                todos[currentTodoIndex][input.dataset.field] = event.target.value;
-               if (input.dataset.field === 'content') {
-                  currentRow.dataset.content = event.target.value;
-                  oldValue = event.target.value;
-               }
+               // if (input.dataset.field === 'content') {
+                  // currentRow.dataset.content = event.target.value;
+                  // oldValue = event.target.value;
+               // }
                console.log(todos);
             });
          });
