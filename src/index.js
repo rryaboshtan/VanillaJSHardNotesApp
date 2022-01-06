@@ -97,7 +97,7 @@ function renderTodoList(todos) {
                <button><i class="fas fa-trash"></i></button></td>`;
          } else if (todoField === 'category') {
             str += `<td>
-                     <select data-field="${todoField}"> 
+                     <select data-field="${todoField}" disabled> 
                         <option value="value1" selected>Task</option>
                         <option value="value2">Random Thought</option>
                         <option value="value3">Idea</option>
@@ -122,6 +122,13 @@ function renderArchivedTodoList(archivedTodos) {
       for (let todoField of todoFields) {
          if (todoField === 'command') {
             str += '';
+         } else if (todoField === 'category') {
+            str += `<td>
+                     <select data-field="${todoField}" disabled> 
+                        <option value="value1" selected>Task</option>
+                        <option value="value2">Random Thought</option>
+                        <option value="value3">Idea</option>
+                     </select></td>`;
          } else {
             str += `<td><input data-field="${todoField}" type="text" disabled value="${todo[todoField]}"></td>`;
          }
@@ -149,13 +156,49 @@ const onArchiveClick = event => {
 };
 renderTodoList(todos);
 renderCategories();
-addEditEvents();
-addDeleteEvents();
-addCreateNoteEvent();
+initEditEvents();
+initDeleteEvents();
+initCreateNoteEvent();
+initSelectEvents();
+initArchiveNoteEvents();
 
-addArchiveNoteEvents();
+function initSelectEvents() {
+   const selectItems = document.querySelectorAll('option');
+   let oldCategory = null;
 
-function addArchiveRowsEvents() {
+   selectItems.forEach(selectItems);
+
+   selectItems.forEach(selectItem => {
+      selectItem.addEventListener('click', event => {
+         oldCategory = event.target.value;
+      });
+
+      selectItem.addEventListener('change', event => {
+         const currentRow = event.target.parentElement.parentElement;
+
+         const currentTodoIndex = archivedTodos.findIndex(todo => todo.content === currentRow.dataset.content);
+         const currentTodo = archivedTodos.splice(currentTodoIndex, 1);
+         const oldCategory = todos[currentTodoIndex].category;
+
+         todos[currentTodoIndex].category = event.target.value;
+         
+         //   console.log(todos);
+         //   todos = todos.concat(currentTodo);
+         // currentRow.remove();
+         //   renderNewRow(currentTodo[0]);
+         // categories[currentTodo[0].category].archived--;
+         categories[oldCategory].active--;
+         categories[todos[currentTodoIndex].category].active++;
+         renderTodoList(todos);
+         renderCategories();
+
+         initArchiveNoteEvents();
+         archivedRow.remove();
+      });
+   });
+}
+
+function initArchiveRowsEvents() {
    const archivedTableBody = document.querySelector('.archived-table-body');
    const archivedRows = Array.from(archivedTableBody.children);
 
@@ -187,15 +230,12 @@ function addArchiveRowsEvents() {
    });
 }
 
-function addArchiveNoteEvents() {
+function initArchiveNoteEvents() {
    count++;
    let archiveIcons = document.querySelectorAll('.fa-archive');
    console.log('Archive length Event listeners ', archiveIcons.length);
    const archiveAllIcon = archiveIcons[0];
    archiveIcons = Array.from(archiveIcons).slice(-(archiveIcons.length - 1));
-
-   // const archivedTable = document.querySelector('.archived-table');
-   // archivedTable.classList.toggle('visible');
 
    let archiveButtons = Array.from(archiveIcons).map(iconElement => iconElement.parentElement);
 
@@ -214,7 +254,7 @@ function addArchiveNoteEvents() {
          archivedTable.classList.toggle('visible');
 
          renderArchivedTodoList(archivedTodos);
-         addArchiveRowsEvents();
+         initArchiveRowsEvents();
       }
    });
 }
@@ -250,6 +290,13 @@ function renderNewRow(newTodo) {
          str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
                <button><i class="fas fa-archive"></i></button>
                <button><i class="fas fa-trash"></i></button></td>`;
+      } else if (todoField === 'category') {
+         str += `<td>
+                     <select data-field="${todoField}" disabled> 
+                        <option value="value1" selected>Task</option>
+                        <option value="value2">Random Thought</option>
+                        <option value="value3">Idea</option>
+                     </select></td>`;
       } else {
          str += `<td><input data-field="${todoField}" type="text" disabled value="${addedTodo[todoField]}"></td>`;
       }
@@ -257,21 +304,21 @@ function renderNewRow(newTodo) {
    str += `</tr>`;
    tbody.innerHTML += str;
 
-   addEditEvents();
-   addDeleteEvents();
+   initEditEvents();
+   initDeleteEvents();
 }
 
-function addCreateNoteEvent() {
+function initCreateNoteEvent() {
    const createNoteButton = document.querySelector('.create-note');
    createNoteButton.addEventListener('click', () => {
       const archivedTable = document.querySelector('.archived-table');
       archivedTable.classList.toggle('visible');
       renderNewRow(null);
-      addArchiveNoteEvents();
+      initArchiveNoteEvents();
    });
 }
 
-function addDeleteEvents() {
+function initDeleteEvents() {
    let deleteIcons = document.querySelectorAll('.fa-trash');
    deleteIcons = Array.from(deleteIcons).slice(-(deleteIcons.length - 1));
 
@@ -292,18 +339,18 @@ function addDeleteEvents() {
    });
 }
 
-function addEditEvents() {
+function initEditEvents() {
    let isEditMode = false;
 
    const editIcons = document.querySelectorAll('.fa-pencil-alt');
    const editButtons = Array.from(editIcons).map(iconElement => iconElement.parentElement);
-   editButtons.forEach((editButton, index) => {
+   editButtons.forEach(editButton => {
       editButton.addEventListener('click', event => {
          isEditMode = !isEditMode;
          const tbody = document.querySelector('.table-body');
          const currentRow = event.target.parentElement.parentElement.parentElement;
          let oldValue = null;
-         const inputs = currentRow.querySelectorAll('input');
+         const inputs = currentRow.querySelectorAll('input, select');
 
          inputs.forEach(input => {
             if (!isEditMode) {

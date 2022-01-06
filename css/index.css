@@ -4,7 +4,7 @@ div {
 }
 
 i {
-  font-size: 20px;
+  font-size: 15px;
 }
 
 button {
@@ -17,12 +17,14 @@ button.head-button {
 }
 
 button.create-note {
+  position: relative;
+  z-index: 2;
+  left: 912px;
   border: 1px solid #cccccc;
   border-radius: 3px;
   padding: 3px;
   margin: 5px auto 0px auto;
-  position: relative;
-  left: 892px;
+  bottom: 0px;
 }
 
 * {
