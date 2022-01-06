@@ -288,26 +288,7 @@ function renderNewRow(newNote) {
 
    const noteFields = Object.keys(addedNote);
 
-   let str = `<tr data-id="${addedNote.id}"><td class="first-column">${categoriesMap[addedNote.category]}</td>`;
-   for (let noteField of noteFields) {
-      if (noteField === 'command') {
-         str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
-               <button><i class="fas fa-archive"></i></button>
-               <button><i class="fas fa-trash"></i></button></td>`;
-      } else if (noteField === 'category') {
-         str += `<td>
-                     <select data-field="${noteField}" disabled> 
-                        <option value="Task" ${addedNote[noteField] === 'Task' ? 'selected' : ''}>Task</option>
-                        <option value="Random Thought" ${
-                           addedNote[noteField] === 'Random Thought' ? 'selected' : ''
-                        }>Random Thought</option>
-                        <option value="Idea" ${addedNote[noteField] === 'Idea' ? 'selected' : ''}>Idea</option>
-                     </select></td>`;
-      } else {
-         str += `<td><input data-field="${noteField}" type="text" disabled value="${addedNote[noteField]}"></td>`;
-      }
-   }
-   str += `</tr>`;
+   const str = renderOneNote(addedNote);
    tbody.innerHTML += str;
 
    initSelectEvents();
