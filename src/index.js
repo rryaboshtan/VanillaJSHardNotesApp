@@ -81,6 +81,31 @@ function renderCategories() {
    tbody.innerHTML = str;
 }
 
+function renderOneNote(note) {
+   const noteFields = Object.keys(note);
+   let str = `<tr data-id="${note.id}"><td class="first-column">${categoriesMap[note.category]}</td>`;
+   for (let noteField of noteFields) {
+      if (noteField === 'command') {
+         str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
+               <button><i class="fas fa-archive"></i></button>
+               <button><i class="fas fa-trash"></i></button></td>`;
+      } else if (noteField === 'category') {
+         str += `<td>
+                     <select data-field="${noteField}" disabled> 
+                     
+                        <option value="Task" ${note[noteField] === 'Task' ? 'selected' : ''}>Task</option>
+                        <option value="Random Thought" ${
+                           note[noteField] === 'Random Thought' ? 'selected' : ''
+                        }>Random Thought</option>
+                        <option value="Idea" ${note[noteField] === 'Idea' ? 'selected' : ''}>Idea</option>
+                     </select></td>`;
+      } else {
+         str += `<td><input data-field="${noteField}" type="text" disabled value="${note[noteField]}"></td>`;
+      }
+   }
+   str += `</tr>`;
+   return str;
+}
 function renderNoteList(notes) {
    const tbody = document.querySelector('.table-body');
    tbody.innerHTML = '';
@@ -92,29 +117,7 @@ function renderNoteList(notes) {
          writable: true,
          value: Math.random() * 200,
       });
-
-      const noteFields = Object.keys(note);
-      str += `<tr data-id="${note.id}"><td class="first-column">${categoriesMap[note.category]}</td>`;
-      for (let noteField of noteFields) {
-         if (noteField === 'command') {
-            str += `<td class="command"><button><i class="fas fa-pencil-alt"></i></button>
-               <button><i class="fas fa-archive"></i></button>
-               <button><i class="fas fa-trash"></i></button></td>`;
-         } else if (noteField === 'category') {
-            str += `<td>
-                     <select data-field="${noteField}" disabled> 
-                     
-                        <option value="Task" ${note[noteField] === 'Task' ? 'selected' : ''}>Task</option>
-                        <option value="Random Thought" ${
-                           note[noteField] === 'Random Thought' ? 'selected' : ''
-                        }>Random Thought</option>
-                        <option value="Idea" ${note[noteField] === 'Idea' ? 'selected' : ''}>Idea</option>
-                     </select></td>`;
-         } else {
-            str += `<td><input data-field="${noteField}" type="text" disabled value="${note[noteField]}"></td>`;
-         }
-      }
-      str += `</tr>`;
+      str += renderOneNote(note);
    }
    tbody.innerHTML = str;
 }
@@ -283,7 +286,7 @@ function renderNewRow(newNote) {
    categories[addedNote.category].active++;
    renderCategories();
 
-   const noteFields = Object.keys(notes[0]);
+   const noteFields = Object.keys(addedNote);
 
    let str = `<tr data-id="${addedNote.id}"><td class="first-column">${categoriesMap[addedNote.category]}</td>`;
    for (let noteField of noteFields) {
